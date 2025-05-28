@@ -1,0 +1,45 @@
+# IntelliJ IDEA project files
+.idea/
+*.iml
+
+# Compiled class files
+*.class
+
+# Build output directories
+/out/
+target/
+build/
+
+# Logs
+*.log
+
+# OS-specific files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.swp
+*.swo
+*.bak
+
+# Maven
+.mvn/
+!**/src/main/**/mvnw
+!**/src/main/**/mvnw.cmd
+.mvnw
+.mvnw.cmd
+
+# Gradle
+.gradle/
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!gradlew
+!gradlew.bat
+
+# Eclipse (just in case)
+.classpath
+.project
+.settings/
+
+# VS Code (if used alongside IntelliJ)
+.vscode/
