@@ -5,14 +5,20 @@ import javax.swing.*;
 public class GDgraphics extends JComponent {
     private int frameWidth;
     private int frameHeight;
+    private Image playerImg;
+    private Image spikeImg;
 
     public GDgraphics(int w, int h) {
         frameWidth = w;
         frameHeight = h;
+
+        // Load images from project folder
+        playerImg = Toolkit.getDefaultToolkit().getImage("GDdefaulticon.png");
+        spikeImg = Toolkit.getDefaultToolkit().getImage("GDspike.png");
     }
 
     protected void paintComponent(Graphics g) {
-        super.paintComponent(g); // Clear background
+        super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
         // Anti-aliasing
@@ -27,19 +33,16 @@ public class GDgraphics extends JComponent {
         int groundHeight = 100;
         g2d.fillRect(0, frameHeight - groundHeight, frameWidth, groundHeight);
 
-        // Player cube
-        g2d.setColor(Color.CYAN);
+        // Draw player image
         int cubeSize = 40;
         int cubeX = 100;
         int cubeY = frameHeight - groundHeight - cubeSize;
-        g2d.fillRect(cubeX, cubeY, cubeSize, cubeSize);
+        g2d.drawImage(playerImg, cubeX, cubeY, cubeSize, cubeSize, this);
 
-        // Spike (triangle)
-        g2d.setColor(Color.RED);
-        Polygon spike = new Polygon();
-        spike.addPoint(300, frameHeight - groundHeight);        // bottom left
-        spike.addPoint(330, frameHeight - groundHeight);        // bottom right
-        spike.addPoint(315, frameHeight - groundHeight - 30);   // top
-        g2d.fillPolygon(spike);
+        // Draw spike image
+        int spikeSize = 40;
+        int spikeX = 300;
+        int spikeY = frameHeight - groundHeight - spikeSize;
+        g2d.drawImage(spikeImg, spikeX, spikeY, spikeSize, spikeSize, this);
     }
 }
