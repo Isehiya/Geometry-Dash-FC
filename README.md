@@ -35,6 +35,7 @@ A simplified Geometry Dash clone made in Java for a school assignment. Built usi
 <details>
    <summary>Game Description</summary>
 
+
 Geometry Dash FC is a one-player platformer game inspired by the original Geometry Dash. The goal is to jump over obstacles and survive until the end of the level without crashing into a hazardous hitbox.
 
    <details>
@@ -128,7 +129,10 @@ Polish graphics and user interface – Both
 </details>
 ---
 
-⚠️ Anticipated Challenges
+## ⚠️ Anticipated Challenges
+
+<details>
+   <summary>Anticipated Challenges</summary>
 Smooth game loop: Java Swing isn’t designed for real-time games, so syncing frame updates smoothly may be difficult.
 
 Collision accuracy: Making sure the player’s hitbox is fair and responsive.
@@ -139,9 +143,15 @@ Graphics design: Making simple but visually appealing graphics using only geomet
 
 Audio (if attempted): Loading and syncing sound effects correctly in Java.
 
+</details>
+
 ---
 
-💡 New Programming Concepts to Learn
+## 💡 New Programming Concepts to Learn
+
+<details>
+   <summary>New Programming Concepts to Learn</summary>
+
 Implementing a game loop with Swing timers or threads.
 
 Collision detection using shapes from java.awt.geom.
@@ -149,6 +159,8 @@ Collision detection using shapes from java.awt.geom.
 Creating a responsive UI layout with canvas-based drawing.
 
 Possibly playing audio using Clip or AudioInputStream in Java.
+
+</details>
 
 ---
 
