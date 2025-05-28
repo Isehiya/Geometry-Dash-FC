@@ -137,15 +137,21 @@ Geometry Dash FC is a one-player platformer game inspired by the original Geomet
 
 <details>
    <summary>Anticipated Challenges</summary>
-Smooth game loop: Java Swing isn’t designed for real-time games, so syncing frame updates smoothly may be difficult.
 
-Collision accuracy: Making sure the player’s hitbox is fair and responsive.
+### Smooth game loop: 
+Java Swing isn’t designed for real-time games, so syncing frame updates smoothly may be difficult.
 
-Jump timing and feel: Tweaking gravity and jump height for good gameplay feel.
+### Collision accuracy: 
+Making sure the player’s hitbox is fair and responsive.
 
-Graphics design: Making simple but visually appealing graphics using only geometric shapes.
+### Jump timing and feel: 
+Tweaking gravity and jump height for good gameplay feel.
 
-Audio (if attempted): Loading and syncing sound effects correctly in Java.
+### Graphics design: 
+Making simple but visually appealing graphics using only geometric shapes.
+
+### Audio (if attempted): 
+Loading and syncing sound effects correctly in Java.
 
 </details>
 
