@@ -31,6 +31,126 @@ A simplified Geometry Dash clone made in Java for a school assignment. Built usi
 
 ---
 
+## 🎮 Game Description
+<details>
+
+Geometry Dash FC is a one-player platformer game inspired by the original Geometry Dash. The goal is to jump over obstacles and survive until the end of the level without crashing into a hazardous hitbox.
+
+   <details>
+      <summary>Player Controls</summary>
+
+   ### Player Controls:
+
+   The player uses the keyboard (spacebar or up-arrow) to make the character jump.
+
+   </details>
+   
+   <details>
+      <summary>Gameplay</summary>
+
+   ### Gameplay:
+
+   The game runs automatically (side-scrolling), and the player must time their jumps to avoid hitting spikes or incoming blocks.
+
+   The player dies and restarts the level if they hit an obstacle.
+
+   </details>
+
+   <details>
+      <summary>Graphics</summary>
+
+   ### Graphics:
+
+   Graphics are built using Java Swing, AWT, and Geom.
+
+   The player character and obstacles are represented using simple geometric shapes.
+
+   </details>
+
+   <details>
+      <summary>Levels</summary>
+
+   ### Levels:
+
+   The game will include at least one fully playable level.
+
+   If there is time, more maps will be added with increasing difficulty.
+
+   </details>
+
+   <details>
+      <summary>Timer & Speed</summary>
+
+   ### Timer & Speed:
+
+   The level has a consistent auto-scroll speed, simulating the flow of classic Geometry Dash.
+
+   </details>
+
+   <details>
+      <summary>Sound and Effects</summary>
+
+   ### Sound and Effects:
+
+   If time allows, simple background music or sound effects may be added using Java’s audio libraries.
+
+   </details>
+
+</details>
+
+---
+
+## 🛠️ Project Steps
+
+<details>
+   <summary>Project Steps</summary>
+
+🔢 Development Timeline (Rough Order)
+Create main game window (GDmain) and set up canvas – Isehiya
+
+Draw the player character and level obstacles – ay4325434
+
+Implement basic physics and jumping mechanics – Isehiya
+
+Set up the game loop and auto-scroll movement – Isehiya
+
+Add collision detection for obstacles – ay4325434
+
+Create one playable map layout with obstacles – ay4325434
+
+Add restart and death screen handling – Isehiya
+
+Polish graphics and user interface – Both
+
+(Optional) Add second level or map selector – Both
+
+</details>
+---
+
+⚠️ Anticipated Challenges
+Smooth game loop: Java Swing isn’t designed for real-time games, so syncing frame updates smoothly may be difficult.
+
+Collision accuracy: Making sure the player’s hitbox is fair and responsive.
+
+Jump timing and feel: Tweaking gravity and jump height for good gameplay feel.
+
+Graphics design: Making simple but visually appealing graphics using only geometric shapes.
+
+Audio (if attempted): Loading and syncing sound effects correctly in Java.
+
+---
+
+💡 New Programming Concepts to Learn
+Implementing a game loop with Swing timers or threads.
+
+Collision detection using shapes from java.awt.geom.
+
+Creating a responsive UI layout with canvas-based drawing.
+
+Possibly playing audio using Clip or AudioInputStream in Java.
+
+---
+
 ## 🎮 Features
 <details>
    <summary> Features </summary>
