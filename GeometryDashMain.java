@@ -11,6 +11,7 @@ public class GeometryDashMain extends JComponent{
             frameHeight = h;
         }
         protected void paintComponent(Graphics g){
+            Graphics2D g2d = (Graphics2D) g;
 
         }
 
