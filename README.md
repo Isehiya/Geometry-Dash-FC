@@ -4,6 +4,19 @@ A simplified Geometry Dash clone made in Java for a school assignment. Built usi
 
 ![Java](https://img.shields.io/badge/Java-17+-red)
 ![Built with IntelliJ](https://img.shields.io/badge/IDE-IntelliJ-blue)
+![UI](https://img.shields.io/badge/Swing-AWT%20%2F%20Swing-green)
+![Status](https://img.shields.io/badge/Status-In%20Development-yellow)
+![Entry](https://img.shields.io/badge/Main%20Class-GDmain-blue)
+![Platform](https://img.shields.io/badge/Platform-PC%20Only-lightgrey)
+![Authors](https://img.shields.io/badge/Authors-Isehiya%20%26%20ay4325434-cyan)
+![License](https://img.shields.io/badge/License-Educational-blueviolet)
+
+| Feature        | Status    |
+|----------------|-----------|
+| Basic Movement | 🔲 Not Started |
+| Collision      | 🔄 Planned |
+| Music          | 🔄 Planned|
+| Level Loader   | 🔄 Planned |
 
 ---
 
