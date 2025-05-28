@@ -127,6 +127,7 @@ Polish graphics and user interface – Both
 (Optional) Add second level or map selector – Both
 
 </details>
+
 ---
 
 ## ⚠️ Anticipated Challenges
