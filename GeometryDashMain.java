@@ -13,6 +13,9 @@ public class GeometryDashMain extends JComponent{
         protected void paintComponent(Graphics g){
             Graphics2D g2d = (Graphics2D) g;
         //jos is gay
+
+
+            //joshua hy is gay
         }
 
 }
