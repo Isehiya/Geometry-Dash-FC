@@ -11,6 +11,13 @@ A simplified Geometry Dash clone made in Java for a school assignment. Built usi
 ![Authors](https://img.shields.io/badge/Authors-Isehiya%20%26%20ay4325434-cyan)
 ![License](https://img.shields.io/badge/License-Educational-blueviolet)
 
+---
+
+## 🚀 Progress
+
+<details>
+   <summary>Progress</summary>
+
 | Feature             | Status         |
 |---------------------|----------------|
 | Working JFrame      | ✅ Done         |
@@ -29,6 +36,7 @@ A simplified Geometry Dash clone made in Java for a school assignment. Built usi
 | ------------------- | -----------    |
 | Game                | ⚠️ WIP         |
 
+</details>
 
 ---
 
