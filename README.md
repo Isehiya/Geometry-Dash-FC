@@ -107,24 +107,27 @@ Geometry Dash FC is a one-player platformer game inspired by the original Geomet
 <details>
    <summary>Project Steps</summary>
 
-🔢 Development Timeline (Rough Order)
-Create main game window (GDmain) and set up canvas – Isehiya
+### 🔢 Development Timeline (Rough Order)
 
-Draw the player character and level obstacles – ay4325434
+- Create main game window (GDmain) and set up canvas – Isehiya
 
-Implement basic physics and jumping mechanics – Isehiya
+- Design and create a working starting menu - Both
 
-Set up the game loop and auto-scroll movement – Isehiya
+- Draw the player character and level obstacles – Isehiya
 
-Add collision detection for obstacles – ay4325434
+- Implement basic physics and jumping mechanics – ay4325434
 
-Create one playable map layout with obstacles – ay4325434
+- Set up the game loop and auto-scroll movement – Isehiya
 
-Add restart and death screen handling – Isehiya
+- Add collision detection for obstacles – ay4325434
 
-Polish graphics and user interface – Both
+- Create one playable map layout with obstacles – ay4325434
 
-(Optional) Add second level or map selector – Both
+- Add restart and death screen handling – Both
+
+- Polish graphics and user interface – Both
+
+- (Optional) Add second level – Both
 
 </details>
 
