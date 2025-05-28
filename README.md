@@ -11,12 +11,24 @@ A simplified Geometry Dash clone made in Java for a school assignment. Built usi
 ![Authors](https://img.shields.io/badge/Authors-Isehiya%20%26%20ay4325434-cyan)
 ![License](https://img.shields.io/badge/License-Educational-blueviolet)
 
-| Feature        | Status    |
-|----------------|-----------|
-| Basic Movement | 🔲 Not Started |
-| Collision      | 🔄 Planned |
-| Music          | 🔄 Planned|
-| Level Loader   | 🔄 Planned |
+| Feature             | Status         |
+|---------------------|----------------|
+| Working JFrame      | ✅ Done         |
+| Working Graphics    | ✅ Done         |
+| Loaded Icons        | ✅ Done         |
+| Proper Menu         | 🔄 Planned     |
+| Working Menu        | 🔄 Planned     |
+| Moving Background   | ✅ Done         |
+| Basic Movement      | 🔲 Not Started |
+| Basic Gravity       | 🔄 Planned     |
+| Collision           | 🔄 Planned     |
+| Music               | 🔄 Planned     |
+| Death Effects       | 🔄 Planned     |
+| Reset on Death      | 🔄 Planned     |
+| Pause Menu          | 🔄 Planned     |
+| ------------------- | -----------    |
+| Game                | ⚠️ WIP         |
+
 
 ---
 
