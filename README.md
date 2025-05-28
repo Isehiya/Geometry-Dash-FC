@@ -4,6 +4,11 @@ A simplified Geometry Dash clone made in Java for a school assignment. Built usi
 
 ---
 
+## 👥 Contributors
+- Isehiya
+
+- ay4325434
+
 ## 🎮 Features
 
 - Side-scrolling platformer gameplay
@@ -37,11 +42,6 @@ Run the GDmain class to launch the game.
 
 ## ✅ Make sure Java is installed and configured in IntelliJ (Project SDK set to Java 17+).
 
-## 👥 Contributors
-- Isehiya
-
-- ay4325434
-
 ## ⚠️ Development Notes
 Still troubleshooting and building core functionality.
 
@@ -51,3 +51,4 @@ Project is in active development.
 
 ## 📌 Disclaimer
 This project is for educational use only and is not affiliated with or endorsed by the official Geometry Dash game or developers.
+
