@@ -13,7 +13,7 @@ A simplified Geometry Dash clone made in Java for a school assignment. Built usi
 
 ---
 
-## 🚀 Progress
+## 🚀 Progress  
 
 <details>
    <summary>Progress</summary>
@@ -233,7 +233,6 @@ Possibly playing audio using Clip or AudioInputStream in Java.
    ```bash
    git clone https://github.com/Isehiya/Geometry-Dash-FC.git
    ```
-Open the project in IntelliJ IDEA.
 
 Run the GDmain class to launch the game.
 
