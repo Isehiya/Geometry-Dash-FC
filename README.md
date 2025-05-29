@@ -165,7 +165,7 @@ Java Swing isn’t designed for real-time games, so syncing frame updates smooth
 Making sure the player’s hitbox is fair and responsive.
 
 ### Jump timing and feel: 
-Tweaking gravity and jump height for good gameplay feel.
+Tweaking gravity and jump height for good gameplay feel. This may include input delay.
 
 ### Graphics design: 
 Making simple but visually appealing graphics using only geometric shapes.
