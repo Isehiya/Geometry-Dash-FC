@@ -228,7 +228,7 @@ Possibly playing audio using Clip or AudioInputStream in Java.
 <details>
    <summary>How to Run</summary>
 
-1. Clone the repository:
+Clone the repository:
 
    ```bash
    git clone https://github.com/Isehiya/Geometry-Dash-FC.git
