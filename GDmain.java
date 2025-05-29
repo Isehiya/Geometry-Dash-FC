@@ -4,7 +4,7 @@ public class GDmain {
     public static void main(String[] args) {
         JFrame frame = new JFrame("Geometry Dash FC");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(800, 600);
+        frame.setSize(900, 700);
         frame.setResizable(false);
 
         GDgraphics panel = new GDgraphics();
