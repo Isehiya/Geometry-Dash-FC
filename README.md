@@ -219,7 +219,7 @@ Possibly playing audio using Clip or AudioInputStream in Java.
 </details>
 
 ---
-## ✅ Make sure Java is installed and configured in IntelliJ (Project SDK set to Java 17+).
+## ✅ Make sure Java is installed and configured (Project SDK set to Java 17+).
 
 ---
 
