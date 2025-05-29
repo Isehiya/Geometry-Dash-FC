@@ -10,37 +10,32 @@ public class GDgraphics extends JComponent {
     private Image bgImg;
 
     private int bgX = 0;
-    private Timer timer;
     private int scrollSpeed = 2;
 
     public GDgraphics(int w, int h) {
         frameWidth = w;
         frameHeight = h;
 
-        // Load images
         playerImg = Toolkit.getDefaultToolkit().getImage("GDdefaulticon.png");
         spikeImg = Toolkit.getDefaultToolkit().getImage("GDspike.png");
         bgImg = Toolkit.getDefaultToolkit().getImage("GDbackground.png");
+    }
 
-        // Start scrolling background
-        timer = new Timer(16, e -> {
-            bgX -= scrollSpeed;
-            if (bgX <= -frameWidth) {
-                bgX = 0;
-            }
-            repaint();
-        });
-        timer.start();
+    public void updateGame() {
+        // Move background
+        bgX -= scrollSpeed;
+        if (bgX <= -frameWidth) {
+            bgX = 0;
+        }
     }
 
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        // Smooth drawing
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // Scrolling background
+        // Background
         g2d.drawImage(bgImg, bgX, 0, frameWidth, frameHeight, this);
         g2d.drawImage(bgImg, bgX + frameWidth, 0, frameWidth, frameHeight, this);
 
