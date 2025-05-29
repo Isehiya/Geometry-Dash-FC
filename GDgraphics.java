@@ -9,21 +9,21 @@ import javax.imageio.*;
 
 public class GDgraphics extends JPanel implements KeyListener {
     // --- Constants
-    private static final int WIDTH          = 800;
-    private static final int HEIGHT         = 600;
-    private static final int FPS_DELAY      = 16;      // ~60 FPS
-    private static final int GRAVITY        = 1;
-    private static final int JUMP_VELOCITY  = -15;
-    private static final int PLAYER_SIZE    = 50;
-    private static final int GROUND_Y       = 500;     // where player lands
-    private static final int BG_SCROLL_SPEED= 2;
-    private static final double ROT_SPEED   = 5.0;     // deg/frame
+    private static final int WIDTH           = 800;
+    private static final int HEIGHT          = 600;
+    private static final int FPS_DELAY       = 16;      // ~60 FPS
+    private static final int GRAVITY         = 1;
+    private static final int JUMP_VELOCITY   = -15;
+    private static final int PLAYER_SIZE     = 50;
+    private static final int GROUND_Y        = 500;     // where player lands
+    private static final int BG_SCROLL_SPEED = 2;
+    private static final double ROT_SPEED    = 5.0;     // deg/frame
 
     // --- State
     private Rectangle2D.Double player;
-    private int velocityY   = 0;
-    private boolean isJump  = false;
-    private double rotation = 0;
+    private int velocityY    = 0;
+    private boolean isJump   = false;
+    private double rotation  = 0;
 
     // --- Images
     private BufferedImage playerImg;
@@ -47,7 +47,9 @@ public class GDgraphics extends JPanel implements KeyListener {
             blockImg  = ImageIO.read(new File("GDblock.png"));
             bgImg     = ImageIO.read(new File("GDbackground.png"));
         } catch (IOException e) {
-            System.err.println("Error loading images—make sure GDdefaulticon.png, GDblock.png, GDbackground.png are in your working dir.");
+            System.err.println(
+                    "Error loading images—make sure GDdefaulticon.png, GDblock.png, GDbackground.png are in your working dir."
+            );
         }
     }
 
@@ -74,7 +76,9 @@ public class GDgraphics extends JPanel implements KeyListener {
         player.y   += velocityY;
 
         // rotate in air
-        if (isJump) rotation = (rotation + ROT_SPEED) % 360;
+        if (isJump) {
+            rotation = (rotation + ROT_SPEED) % 360;
+        }
 
         // land
         if (player.y > GROUND_Y) {
@@ -98,7 +102,7 @@ public class GDgraphics extends JPanel implements KeyListener {
             }
         }
 
-        // 2) tile GDblock.png for the floor (fills from ground up)
+        // 2) tile GDblock.png for the floor
         if (blockImg != null) {
             int bw = blockImg.getWidth();
             int bh = blockImg.getHeight();
@@ -125,6 +129,19 @@ public class GDgraphics extends JPanel implements KeyListener {
             g2.setColor(Color.BLUE);
             g2.fill(player);
         }
+
+        // 4) debug overlay
+        g2.setColor(new Color(0, 0, 0, 200));
+        g2.fillRect(10, 10, 180, 110);
+        g2.setColor(Color.WHITE);
+        g2.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        int line = 0;
+        g2.drawString(String.format("player.x   = %.1f", player.x), 15, 30 + line*15); line++;
+        g2.drawString(String.format("player.y   = %.1f", player.y), 15, 30 + line*15); line++;
+        g2.drawString("velocityY  = " + velocityY,          15, 30 + line*15); line++;
+        g2.drawString("isJump     = " + isJump,             15, 30 + line*15); line++;
+        g2.drawString(String.format("rotation   = %.1f", rotation), 15, 30 + line*15); line++;
+        g2.drawString("bgOffsetX  = " + bgOffsetX,          15, 30 + line*15);
     }
 
     // --- KeyListener
