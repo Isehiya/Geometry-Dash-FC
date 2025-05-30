@@ -154,7 +154,8 @@ public class GDgraphics extends JPanel implements KeyListener {
     // --- KeyListener methods
     @Override
     public void keyPressed(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_SPACE && !isJump) {
+        int code = e.getKeyCode();
+        if ((code == KeyEvent.VK_SPACE || code == KeyEvent.VK_UP) && !isJump) {
             velocityY = JUMP_VELOCITY;
             isJump    = true;
         }
