@@ -47,45 +47,50 @@ public class GDgraphics extends JPanel implements KeyListener {
             blockImg  = ImageIO.read(new File("GDblock.png"));
             bgImg     = ImageIO.read(new File("GDbackground.png"));
         } catch (IOException e) {
-            System.err.println(
-                    "Error loading images—make sure GDdefaulticon.png, GDblock.png, GDbackground.png are in your working dir."
-            );
+            System.err.println("Error loading images—ensure GDdefaulticon.png, GDblock.png, and GDbackground.png are in your working dir.");
         }
     }
 
     public void startGameLoop() {
         running = true;
-        new Thread(() -> {
-            while (running) {
-                updateGame();
-                repaint();
-                try { Thread.sleep(FPS_DELAY); }
-                catch (InterruptedException ignored) {}
+        Thread loop = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                while (running) {
+                    updateGame();
+                    repaint();
+                    try {
+                        Thread.sleep(FPS_DELAY);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
-        }).start();
+        });
+        loop.start();
     }
 
     private void updateGame() {
-        // background scroll
+        // Scroll background
         if (bgImg != null) {
             bgOffsetX = (bgOffsetX - BG_SCROLL_SPEED) % bgImg.getWidth();
         }
 
-        // gravity
+        // Apply gravity
         velocityY += GRAVITY;
         player.y   += velocityY;
 
-        // rotate in air
+        // Rotate mid-air
         if (isJump) {
             rotation = (rotation + ROT_SPEED) % 360;
         }
 
-        // land
+        // Land on ground
         if (player.y > GROUND_Y) {
-            player.y    = GROUND_Y;
-            velocityY   = 0;
-            isJump      = false;
-            rotation    = 0;
+            player.y   = GROUND_Y;
+            velocityY  = 0;
+            isJump     = false;
+            rotation   = 0;
         }
     }
 
@@ -94,57 +99,59 @@ public class GDgraphics extends JPanel implements KeyListener {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        // 1) draw scrolling background
+        // 1) Draw scrolling background
         if (bgImg != null) {
-            int bw = bgImg.getWidth();
-            for (int i = -1; i <= getWidth() / bw + 1; i++) {
-                g2.drawImage(bgImg, bgOffsetX + i * bw, 0, bw, getHeight(), null);
+            int bwBg = bgImg.getWidth();
+            for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
+                g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), null);
             }
         }
 
-        // 2) tile GDblock.png for the floor
+        // 2) Draw three stacked floor tiles exactly filling gap under player
         if (blockImg != null) {
-            int bw = blockImg.getWidth();
-            int bh = blockImg.getHeight();
-            int floorY = GROUND_Y + PLAYER_SIZE;
-            for (int y = floorY; y < getHeight(); y += bh) {
-                for (int x = 0; x <= getWidth() / bw; x++) {
-                    g2.drawImage(blockImg, x * bw, y, null);
+            int nativeBw = blockImg.getWidth();
+            int nativeBh = blockImg.getHeight();
+            int gapHeight = getHeight() - (GROUND_Y + PLAYER_SIZE);
+            int scaledBh = gapHeight / 3;
+            int scaledBw = nativeBw * scaledBh / nativeBh;
+            int startY = GROUND_Y + PLAYER_SIZE;  // top of top block
+            int offsetX = bgOffsetX % scaledBw;
+            for (int row = 0; row < 3; row++) {
+                int y = startY + row * scaledBh;
+                for (int i = -1; i <= getWidth() / scaledBw + 1; i++) {
+                    g2.drawImage(blockImg, offsetX + i * scaledBw, y, scaledBw, scaledBh, null);
                 }
             }
         }
 
-        // 3) draw & rotate player icon
+        // 3) Draw and rotate player icon
         if (playerImg != null) {
             AffineTransform old = g2.getTransform();
-            double cx = player.x + PLAYER_SIZE/2.0;
-            double cy = player.y + PLAYER_SIZE/2.0;
+            double cx = player.x + PLAYER_SIZE / 2.0;
+            double cy = player.y + PLAYER_SIZE / 2.0;
             g2.rotate(Math.toRadians(rotation), cx, cy);
-            g2.drawImage(playerImg,
-                    (int)player.x, (int)player.y,
-                    PLAYER_SIZE, PLAYER_SIZE,
-                    null);
+            g2.drawImage(playerImg, (int) player.x, (int) player.y, PLAYER_SIZE, PLAYER_SIZE, null);
             g2.setTransform(old);
         } else {
             g2.setColor(Color.BLUE);
             g2.fill(player);
         }
 
-        // 4) debug overlay
+        // 4) Debug overlay
         g2.setColor(new Color(0, 0, 0, 200));
-        g2.fillRect(10, 10, 180, 110);
+        g2.fillRect(10, 10, 200, 125);
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("Monospaced", Font.PLAIN, 12));
         int line = 0;
-        g2.drawString(String.format("player.x   = %.1f", player.x), 15, 30 + line*15); line++;
-        g2.drawString(String.format("player.y   = %.1f", player.y), 15, 30 + line*15); line++;
-        g2.drawString("velocityY  = " + velocityY,          15, 30 + line*15); line++;
-        g2.drawString("isJump     = " + isJump,             15, 30 + line*15); line++;
-        g2.drawString(String.format("rotation   = %.1f", rotation), 15, 30 + line*15); line++;
-        g2.drawString("bgOffsetX  = " + bgOffsetX,          15, 30 + line*15);
+        g2.drawString(String.format("player.x   = %.1f", player.x), 15, 30 + line * 15); line++;
+        g2.drawString(String.format("player.y   = %.1f", player.y), 15, 30 + line * 15); line++;
+        g2.drawString("velocityY  = " + velocityY, 15, 30 + line * 15); line++;
+        g2.drawString("isJump     = " + isJump, 15, 30 + line * 15); line++;
+        g2.drawString(String.format("rotation   = %.1f", rotation), 15, 30 + line * 15); line++;
+        g2.drawString("bgOffsetX  = " + bgOffsetX, 15, 30 + line * 15);
     }
 
-    // --- KeyListener
+    // --- KeyListener methods
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SPACE && !isJump) {
