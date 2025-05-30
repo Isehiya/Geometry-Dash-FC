@@ -18,23 +18,23 @@ A simplified Geometry Dash clone made in Java for a school assignment. Built usi
 <details>
    <summary>Progress</summary>
 
-| Feature             | Status         |
-|---------------------|----------------|
-| Working JFrame      | ✅ Done         |
-| Working Graphics    | ✅ Done         |
-| Loaded Icons        | ✅ Done         |
-| Proper Menu         | 🔄 Planned     |
-| Working Menu        | 🔄 Planned     |
-| Moving Background   | ✅ Done         |
+| Feature             | Status       |
+|---------------------|--------------|
+| Working JFrame      | ✅ Done       |
+| Working Graphics    | ✅ Done       |
+| Loaded Icons        | ✅ Done       |
+| Proper Menu         | 🔄 Planned   |
+| Working Menu        | 🔄 Planned   |
+| Moving Background   | ✅ Done       |
 | Basic Movement      | 🔲 Not Started |
-| Basic Gravity       | 🔄 Planned     |
-| Collision           | 🔄 Planned     |
-| Music               | 🔄 Planned     |
-| Death Effects       | 🔄 Planned     |
-| Reset on Death      | 🔄 Planned     |
-| Pause Menu          | 🔄 Planned     |
-| ------------------- | -----------    |
-| Game                | ⚠️ WIP         |
+| Basic Gravity       | ✅ Done       |
+| Collision           | 🔄 Planned   |
+| Music               | 🔄 Planned   |
+| Death Effects       | 🔄 Planned   |
+| Reset on Death      | 🔄 Planned   |
+| Pause Menu          | 🔄 Planned   |
+| ------------------- | -----------  |
+| Game                | ⚠️ WIP       |
 
 </details>
 
