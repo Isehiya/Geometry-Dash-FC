@@ -53,8 +53,6 @@ A simplified Geometry Dash clone made in Java for a school assignment. Built usi
 
 ## 🎮 Game Description
 <details>
-   <summary>Game Description</summary>
-
 
 Geometry Dash FC is a one-player platformer game inspired by the original Geometry Dash. The goal is to jump over obstacles and survive until the end of the level without crashing into a hazardous hitbox.
 
