@@ -9,14 +9,14 @@ import javax.imageio.*;
 
 public class GDgraphics extends JPanel implements KeyListener {
     // --- Constants
-    private static final int WIDTH           = 800;
-    private static final int HEIGHT          = 600;
-    private static final int FPS_DELAY       = 16;      // ~60 FPS
-    private static final int GRAVITY         = 1;
-    private static final int JUMP_VELOCITY   = -15;
-    private static final int PLAYER_SIZE     = 50;
-    private static final int GROUND_Y        = 500;     // where player lands
-    private static final int BG_SCROLL_SPEED = 2;
+    public static final int WIDTH           = 800;
+    public static final int HEIGHT          = 600;
+    public static final int FPS_DELAY       = 16;      // ~60 FPS
+    public static final int GRAVITY         = 1;
+    public  static final int JUMP_VELOCITY   = -15;
+    public static final int PLAYER_SIZE     = 50;
+    public static final int GROUND_Y        = 500;     // where player lands
+    public static final int BG_SCROLL_SPEED = 2;
     private static final double ROT_SPEED    = 5.0;     // deg/frame
 
     // --- State
@@ -26,9 +26,9 @@ public class GDgraphics extends JPanel implements KeyListener {
     private double rotation  = 0;
 
     // --- Images
-    private BufferedImage playerImg;
-    private BufferedImage blockImg;
-    private BufferedImage bgImg;
+    private Image playerImg;
+    private Image blockImg;
+    private Image bgImg;
 
     // --- Scroll
     private int bgOffsetX = 0;
@@ -73,7 +73,7 @@ public class GDgraphics extends JPanel implements KeyListener {
     private void updateGame() {
         // Scroll background
         if (bgImg != null) {
-            bgOffsetX = (bgOffsetX - BG_SCROLL_SPEED) % bgImg.getWidth();
+            bgOffsetX = (bgOffsetX - BG_SCROLL_SPEED) % bgImg.getWidth(this);
         }
 
         // Apply gravity
@@ -101,7 +101,7 @@ public class GDgraphics extends JPanel implements KeyListener {
 
         // 1) Draw scrolling background
         if (bgImg != null) {
-            int bwBg = bgImg.getWidth();
+            int bwBg = bgImg.getWidth(this);
             for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
                 g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), null);
             }
@@ -109,8 +109,8 @@ public class GDgraphics extends JPanel implements KeyListener {
 
         // 2) Draw three stacked floor tiles exactly filling gap under player
         if (blockImg != null) {
-            int nativeBw = blockImg.getWidth();
-            int nativeBh = blockImg.getHeight();
+            int nativeBw = blockImg.getWidth(this);
+            int nativeBh = blockImg.getHeight(this);
             int gapHeight = getHeight() - (GROUND_Y + PLAYER_SIZE);
             int scaledBh = gapHeight / 3;
             int scaledBw = nativeBw * scaledBh / nativeBh;
