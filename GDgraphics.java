@@ -54,7 +54,6 @@ public class GDgraphics extends JPanel implements KeyListener {
     public void startGameLoop() {
         running = true;
         Thread loop = new Thread(new Runnable() {
-            @Override
             public void run() {
                 while (running) {
                     updateGame();
@@ -94,7 +93,6 @@ public class GDgraphics extends JPanel implements KeyListener {
         }
     }
 
-    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
@@ -152,7 +150,6 @@ public class GDgraphics extends JPanel implements KeyListener {
     }
 
     // --- KeyListener methods
-    @Override
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
         if ((code == KeyEvent.VK_SPACE || code == KeyEvent.VK_UP) && !isJump) {
@@ -160,6 +157,6 @@ public class GDgraphics extends JPanel implements KeyListener {
             isJump    = true;
         }
     }
-    @Override public void keyReleased(KeyEvent e) {}
-    @Override public void keyTyped(KeyEvent e) {}
+    public void keyReleased(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {}
 }
