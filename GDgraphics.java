@@ -22,7 +22,7 @@ public class GDgraphics extends JPanel implements KeyListener {
     public double gameSpeed = 1;
 
     // --- State
-    private Rectangle2D.Double player;
+    public static Rectangle2D.Double player;
     private int velocityY    = 0;
     private boolean isJump   = false;
     private double rotation  = 0;
