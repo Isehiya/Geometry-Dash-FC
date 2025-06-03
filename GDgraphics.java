@@ -16,8 +16,10 @@ public class GDgraphics extends JPanel implements KeyListener {
     public  static final int JUMP_VELOCITY   = -15;
     public static final int PLAYER_SIZE     = 50;
     public static final int GROUND_Y        = 500;     // where player lands
-    public static final int BG_SCROLL_SPEED = 2;
+    private static final int BG_SCROLL_SPEED = 2;
     private static final double ROT_SPEED    = 5.0;     // deg/frame
+
+    public double gameSpeed = 1;
 
     // --- State
     private Rectangle2D.Double player;
@@ -30,6 +32,8 @@ public class GDgraphics extends JPanel implements KeyListener {
     private Image blockImg;
     private Image bgImg;
 
+    private Image halfSpeedPortal, speedPortal1, speedPortal2, speedPortal3, speedPortal4;
+
     // --- Scroll
     private int bgOffsetX = 0;
     private boolean running = false;
@@ -40,6 +44,23 @@ public class GDgraphics extends JPanel implements KeyListener {
         setFocusable(true);
         addKeyListener(this);
 
+        MediaTracker tracker = new MediaTracker(this);
+        halfSpeedPortal = Toolkit.getDefaultToolkit().getImage("GDspeedportal0.5.gif");
+        tracker.addImage(halfSpeedPortal, 0);
+        speedPortal1 = Toolkit.getDefaultToolkit().getImage("GDspeedportal1.gif");
+        tracker.addImage(speedPortal1, 1);
+        speedPortal2 = Toolkit.getDefaultToolkit().getImage("GDspeedportal2.gif");
+        tracker.addImage(speedPortal2, 2);
+        speedPortal3 = Toolkit.getDefaultToolkit().getImage("GDspeedportal3.gif");
+        tracker.addImage(speedPortal3, 3);
+        speedPortal4 = Toolkit.getDefaultToolkit().getImage("GDspeedportal4.gif");
+        tracker.addImage(speedPortal4, 4);
+        try{
+            tracker.waitForAll();
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
         player = new Rectangle2D.Double(50, GROUND_Y, PLAYER_SIZE, PLAYER_SIZE);
 
         try {
@@ -47,22 +68,22 @@ public class GDgraphics extends JPanel implements KeyListener {
             blockImg  = ImageIO.read(new File("GDblock.png"));
             bgImg     = ImageIO.read(new File("GDbackground.png"));
         } catch (IOException e) {
-            System.err.println("Error loading images—ensure GDdefaulticon.png, GDblock.png, and GDbackground.png are in your working dir.");
+            System.err.println("Error loading images");
         }
     }
 
+
+
     public void startGameLoop() {
         running = true;
-        Thread loop = new Thread(new Runnable() {
-            public void run() {
-                while (running) {
-                    updateGame();
-                    repaint();
-                    try {
-                        Thread.sleep(FPS_DELAY);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+        Thread loop = new Thread(() -> {
+            while (running) {
+                updateGame();
+                repaint();
+                try {
+                    Thread.sleep(FPS_DELAY);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
         });

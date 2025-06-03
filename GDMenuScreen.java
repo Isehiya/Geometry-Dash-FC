@@ -6,6 +6,7 @@ import java.awt.event.MouseListener;
 public class GDMenuScreen extends JPanel implements MouseListener {
     public GDMenuScreen(){
         setPreferredSize(new Dimension(GDgraphics.WIDTH, GDgraphics.HEIGHT));
+
     }
     @Override
     public void mouseClicked(MouseEvent e) {
