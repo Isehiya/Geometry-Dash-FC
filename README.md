@@ -23,13 +23,13 @@ A simplified Geometry Dash clone made in Java for a school assignment. Built usi
 | Working JFrame      | ✅ Done       |
 | Working Graphics    | ✅ Done       |
 | Loaded Icons        | ✅ Done       |
-| Proper Menu         | 🔄 Planned   |
+| Proper Menu         | ✅ Done   |
 | Working Menu        | 🔄 Planned   |
 | Moving Background   | ✅ Done       |
-| Basic Movement      | 🔲 Not Started |
+| Basic Movement      | ✅ Done    |
 | Basic Gravity       | ✅ Done       |
 | Collision           | 🔄 Planned   |
-| Music               | 🔄 Planned   |
+| Music               | ✅ Done       |
 | Death Effects       | 🔄 Planned   |
 | Reset on Death      | 🔄 Planned   |
 | Pause Menu          | 🔄 Planned   |
