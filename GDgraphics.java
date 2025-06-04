@@ -202,7 +202,6 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 spikeHeight /= 3;
                 g2.drawImage(spike, (int) spikeRect.x, (int) spikeRect.y, spikeWidth, spikeHeight, this);
             }
-            // Re-add moving floor tiles
             if (blockImg != null) {
                 int nativeBw = blockImg.getWidth(this);
                 int nativeBh = blockImg.getHeight(this);
@@ -251,12 +250,12 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     }
     public void mouseDragged(MouseEvent e) {}
     public void mouseClicked(MouseEvent e) {
-        if (playButtonBounds != null && playButtonBounds.contains(e.getPoint())) {
+        if (gameState == 0 && playButtonBounds != null && playButtonBounds.contains(e.getPoint())) {
             gameState = 1;
             if (backgroundMusic1 != null && backgroundMusic1.isRunning()) {
                 backgroundMusic1.stop();
             }
-            if (backgroundMusic2 != null) {
+            if (backgroundMusic2 != null && !backgroundMusic2.isRunning()) {
                 backgroundMusic2.setFramePosition(0);
                 backgroundMusic2.loop(Clip.LOOP_CONTINUOUSLY);
             }
