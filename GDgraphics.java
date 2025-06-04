@@ -7,16 +7,16 @@ import java.awt.geom.Rectangle2D;
 import javax.sound.sampled.*;
 import java.util.*;
 
-public class GDgraphics extends JPanel implements KeyListener {
+public class GDgraphics extends JPanel implements KeyListener, MouseListener {
 
     // --- Constants
     public static final int WIDTH           = 800;
     public static final int HEIGHT          = 600;
     public static final int FPS_DELAY       = 16;      // ~60 FPS
-    public static final int GRAVITY         = 1;
-    public static final int JUMP_VELOCITY   = -15;
+    public static final double GRAVITY         = 0.5;
+    public static final int JUMP_VELOCITY   = -10;
     public static final int GROUND_Y        = 500;     // where player lands
-    private static final double ROT_SPEED    = 10.0;     // deg/frame
+    private static final double ROT_SPEED    = 5.0;     // deg/frame
 
     public static final int SPIKE_HITBOX_WIDTH = 3;
     public static final int SPIKE_HITBOX_HEIGHT = 5;
@@ -30,11 +30,11 @@ public class GDgraphics extends JPanel implements KeyListener {
     public ArrayList<Rectangle2D.Double> spikes = new ArrayList<>();
     public ArrayList<Rectangle2D.Double> hitboxes = new ArrayList<>();
 
-    private int velocityY    = 0;
+    private double velocityY    = 0;
     private boolean isJump   = false;
     private double rotation  = 0;
 
-    public static int gameState = 1;
+    public int gameState = 0;
 
     Clip backgroundMusic1, backgroundMusic2;
 
@@ -53,7 +53,7 @@ public class GDgraphics extends JPanel implements KeyListener {
 
     private int imageOffets1 = 40;
 
-
+    private Rectangle2D.Double button = new Rectangle2D.Double(300, 200, 200, 100);
 
     public GDgraphics() throws UnsupportedAudioFileException, IOException {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -120,8 +120,16 @@ public class GDgraphics extends JPanel implements KeyListener {
 
 
         spikes.add(new Rectangle2D.Double(1000, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(1050, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(1100, 500, 10, 20));
+
+        blocks.add(new Rectangle2D.Double(1400, 450, 40, 40));
 
         hitboxes.add(new Rectangle2D.Double( 1015, 510 , 7, 18));
+        hitboxes.add(new Rectangle2D.Double( 1065, 510 , 7, 18));
+        hitboxes.add(new Rectangle2D.Double( 1115, 510 , 7, 18));
+
+        addMouseListener(this);
 
     } // Constructor
 
@@ -149,12 +157,37 @@ public class GDgraphics extends JPanel implements KeyListener {
             bgOffsetX = (bgOffsetX - scrollSpeed) % bgImg.getWidth(this);
         }
         if(gameState == 1) {
-            if (player.intersects(hitboxes.getFirst())) {
-                System.exit(0);
+            for (int i = 0; i < spikes.size(); i++) {
+                if (player.intersects(hitboxes.get(i))) {
+                    System.exit(0);
+                }
+                spikes.get(i).x -= scrollSpeed;
+                hitboxes.get(i).x -= scrollSpeed;
             }
 
-            spikes.getFirst().x -= scrollSpeed;
-            hitboxes.getFirst().x -= scrollSpeed;
+            for (int i = 0; i < blocks.size(); i++) {
+                if(player.intersects(blocks.get(i))){
+                    if (player.y > blocks.get(i).y){
+                        System.exit(0);
+                    }
+                    else{
+                        isJump = false;
+                        velocityY = 0;
+                        if (rotation <= 45)
+                            rotation = 0;
+                        else if (rotation > 45 && rotation <= 135)
+                            rotation = 90;
+                        else if (rotation > 135 && rotation <= 225)
+                            rotation = 180;
+                        else if (rotation > 225 && rotation <= 315)
+                            rotation = 270;
+                        else
+                            rotation = 0;
+
+                    }
+                }
+                blocks.get(i).x -= scrollSpeed;
+            }
 
             // Apply gravity
             velocityY += GRAVITY;
@@ -239,19 +272,13 @@ public class GDgraphics extends JPanel implements KeyListener {
 
         //--------------------------- Stereo Madness (Gamestate 1) ---------------------------
         else if (gameState == 1) {
-            if (bgImg != null) {
-                int bwBg = bgImg.getWidth(this);
-                for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
-                    g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), null);
-                }
-            }
 
             for (int i = 0; i < spikes.size(); i++) {
                 int spikeHeight = spike.getHeight(this);
                 int spikeWidth = spike.getWidth(this);
                 spikeWidth /= 3;
                 spikeHeight /= 3;
-                if (spikes.get(i) != null) {
+                if (spikes.get(i) != null && spike != null) {
                     g2.drawImage(spike, (int) spikes.get(i).x, (int) spikes.get(i).y, spikeWidth, spikeHeight, this);
                     g2.setColor(Color.RED);
                     g2.drawRect((int) spikes.get(i).x + 15, (int) spikes.get(i).y + 10, 8, 18);
@@ -273,7 +300,12 @@ public class GDgraphics extends JPanel implements KeyListener {
                         g2.drawImage(blockImg, offsetX + i * scaledBw, y, scaledBw, scaledBh, null);
                     }
                 }
+                for (int i = 0; i < blocks.size(); i++) {
+                    g2.drawImage(blockImg, (int)blocks.get(i).x, (int)blocks.get(i).y, scaledBw, scaledBh, this);
+                }
             }
+
+
 
             // 3) Draw and rotate player icon
             if (playerImg != null) {
@@ -332,8 +364,44 @@ public class GDgraphics extends JPanel implements KeyListener {
         }
     }
     public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_SPACE)
+        if (e.getKeyCode() == KeyEvent.VK_SPACE && velocityY == 0)
             isJump = false;
     }
     public void keyTyped(KeyEvent e) {}
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+        if (gameState == 0 && e.getX() > 300 && e.getX() < 500 && e.getY() > 300 && e.getY() < 500){
+            gameState = 1;
+        }
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+        if (gameState == 0) {
+            double mx = e.getX();
+            double my = e.getY();
+
+            if (button.contains(mx, my)) {
+                gameState = 1; // Switch to playing state
+                repaint();
+            }
+        }
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
 }
