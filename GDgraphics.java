@@ -28,6 +28,7 @@ public class GDgraphics extends JPanel implements KeyListener {
     public static Rectangle2D.Double player;
     public ArrayList<Rectangle2D.Double> blocks = new ArrayList<>();
     public ArrayList<Rectangle2D.Double> spikes = new ArrayList<>();
+    public ArrayList<Rectangle2D.Double> hitboxes = new ArrayList<>();
 
     private int velocityY    = 0;
     private boolean isJump   = false;
@@ -92,9 +93,7 @@ public class GDgraphics extends JPanel implements KeyListener {
 
         spikes.add(new Rectangle2D.Double(1000, 500, 10, 20));
 
-        for (int i = 0; i < spikes.size(); i++) {
-
-        }
+        hitboxes.add(new Rectangle2D.Double( 1015, 510 , 7, 18));
 
     } // Constructor
 
@@ -121,10 +120,11 @@ public class GDgraphics extends JPanel implements KeyListener {
         if (bgImg != null) {
             bgOffsetX = (bgOffsetX - scrollSpeed) % bgImg.getWidth(this);
         }
-        if (player.intersects(spikes.getFirst())){
+        if (player.intersects(hitboxes.getFirst())){
             System.exit(0);
         }
         spikes.getFirst().x -= scrollSpeed;
+        hitboxes.getFirst().x -= scrollSpeed;
 
         // Apply gravity
         velocityY += GRAVITY;
@@ -174,7 +174,7 @@ public class GDgraphics extends JPanel implements KeyListener {
             if (spikes.get(i) != null){
                 g2.drawImage(spike, (int) spikes.get(i).x, (int) spikes.get(i).y, spikeWidth, spikeHeight, this);
                 g2.setColor(Color.RED);
-                g2.drawRect((int) spikes.get(i).x, (int) spikes.get(i).y, 10, 20);
+                g2.drawRect((int) spikes.get(i).x+15, (int) spikes.get(i).y+10, 8, 18);
             }
         }
 
@@ -230,6 +230,9 @@ public class GDgraphics extends JPanel implements KeyListener {
             isJump   = true;
         }
     }
-    public void keyReleased(KeyEvent e) {}
+    public void keyReleased(KeyEvent e) {
+        if (e.getKeyCode() == KeyEvent.VK_SPACE)
+            isJump = false;
+    }
     public void keyTyped(KeyEvent e) {}
 }
