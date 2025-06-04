@@ -26,8 +26,8 @@ public class GDgraphics extends JPanel implements KeyListener {
 
     // --- State
     public static Rectangle2D.Double player;
-    public Rectangle2D.Double[] blocks = new Rectangle2D.Double[10000];
-    public Rectangle2D.Double[] spikes = new Rectangle2D.Double[10000];
+    public ArrayList <Rectangle2D.Double> blocks = new ArrayList<>();
+    public ArrayList <Rectangle2D.Double> spikes = new ArrayList<>();
 
     private int velocityY    = 0;
     private boolean isJump   = false;
@@ -90,9 +90,9 @@ public class GDgraphics extends JPanel implements KeyListener {
         backgroundMusic1.setFramePosition(0);
         backgroundMusic1.loop(Clip.LOOP_CONTINUOUSLY);
 
-        spikes[3] = new Rectangle2D.Double(1000, 500, 10, 20);
+        spikes.add(new Rectangle2D.Double(1000, 500, 10, 20));
 
-        for (int i = 0; i < spikes.length; i++) {
+        for (int i = 0; i < spikes.size(); i++) {
 
         }
 
@@ -121,10 +121,10 @@ public class GDgraphics extends JPanel implements KeyListener {
         if (bgImg != null) {
             bgOffsetX = (bgOffsetX - scrollSpeed) % bgImg.getWidth(this);
         }
-        if (player.intersects(spikes[3])){
+        if (player.intersects(spikes.getFirst())){
             System.exit(0);
         }
-        spikes[3].x -= scrollSpeed;
+        spikes.getFirst().x -= scrollSpeed;
 
         // Apply gravity
         velocityY += GRAVITY;
@@ -166,15 +166,15 @@ public class GDgraphics extends JPanel implements KeyListener {
             }
         }
 
-        for (int i = 0; i < spikes.length; i++){
+        for (int i = 0; i < spikes.size(); i++){
             int spikeHeight = spike.getHeight(this);
             int spikeWidth = spike.getWidth(this);
             spikeWidth /= 3;
             spikeHeight /= 3;
-            if (spikes[i] != null){
-                g2.drawImage(spike, (int) spikes[3].x, (int) spikes[3].y, spikeWidth, spikeHeight, this);
+            if (spikes.get(i) != null){
+                g2.drawImage(spike, (int) spikes.get(i).x, (int) spikes.get(i).y, spikeWidth, spikeHeight, this);
                 g2.setColor(Color.RED);
-                g2.drawRect((int) spikes[3].x, (int) spikes[3].y, 10, 20);
+                g2.drawRect((int) spikes.get(i).x, (int) spikes.get(i).y, 10, 20);
             }
         }
 
