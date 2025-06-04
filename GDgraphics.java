@@ -13,7 +13,7 @@ public class GDgraphics extends JPanel implements KeyListener {
     public static final int GRAVITY = 1;
     public static final int JUMP_VELOCITY = -15;
     public static final int GROUND_Y = 500;
-    private static final double ROT_SPEED = 10.0;
+    private static final double ROT_SPEED = 7.0;
 
     public static final int SPIKE_HITBOX_WIDTH = 3;
     public static final int SPIKE_HITBOX_HEIGHT = 5;
