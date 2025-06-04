@@ -34,6 +34,8 @@ public class GDgraphics extends JPanel implements KeyListener {
     private boolean isJump   = false;
     private double rotation  = 0;
 
+    public static int gameState = 0;
+
     Clip backgroundMusic1, backgroundMusic2;
 
     // --- Images
@@ -82,8 +84,10 @@ public class GDgraphics extends JPanel implements KeyListener {
 
         try{
             AudioInputStream sound = AudioSystem.getAudioInputStream(new File("StereoMadness.wav"));
-            backgroundMusic1 = AudioSystem.getClip();
-            backgroundMusic1.open(sound);
+            if(gameState == 0) {
+                backgroundMusic1 = AudioSystem.getClip();
+                backgroundMusic1.open(sound);
+            }
 
         } catch (Exception e) {
 
@@ -158,75 +162,89 @@ public class GDgraphics extends JPanel implements KeyListener {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        // 1) Draw scrolling background
-        if (bgImg != null) {
-            int bwBg = bgImg.getWidth(this);
-            for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
-                g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), null);
-            }
-        }
 
-        for (int i = 0; i < spikes.size(); i++){
-            int spikeHeight = spike.getHeight(this);
-            int spikeWidth = spike.getWidth(this);
-            spikeWidth /= 3;
-            spikeHeight /= 3;
-            if (spikes.get(i) != null){
-                g2.drawImage(spike, (int) spikes.get(i).x, (int) spikes.get(i).y, spikeWidth, spikeHeight, this);
-                g2.setColor(Color.RED);
-                g2.drawRect((int) spikes.get(i).x+15, (int) spikes.get(i).y+10, 8, 18);
-            }
-        }
-
-        // 2) Draw three stacked floor tiles exactly filling gap under player
-        if (blockImg != null) {
-            int nativeBw = blockImg.getWidth(this);
-            int nativeBh = blockImg.getHeight(this);
-            int gapHeight = getHeight() - (GROUND_Y + playerSize);
-            int scaledBh = gapHeight / 3;
-            int scaledBw = nativeBw * scaledBh / nativeBh;
-            int startY = GROUND_Y + playerSize;  // top of top block
-            int offsetX = bgOffsetX % scaledBw;
-            for (int row = 0; row < 3; row++) {
-                int y = startY + row * scaledBh;
-                for (int i = -1; i <= getWidth() / scaledBw + 1; i++) {
-                    g2.drawImage(blockImg, offsetX + i * scaledBw, y, scaledBw, scaledBh, null);
+        if (gameState == 0) {
+            // 1) Draw scrolling background
+            if (bgImg != null) {
+                int bwBg = bgImg.getWidth(this);
+                for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
+                    g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), null);
                 }
             }
+
+
+            for (int i = 0; i < spikes.size(); i++) {
+                int spikeHeight = spike.getHeight(this);
+                int spikeWidth = spike.getWidth(this);
+                spikeWidth /= 3;
+                spikeHeight /= 3;
+                if (spikes.get(i) != null) {
+                    g2.drawImage(spike, (int) spikes.get(i).x, (int) spikes.get(i).y, spikeWidth, spikeHeight, this);
+                    g2.setColor(Color.RED);
+                    g2.drawRect((int) spikes.get(i).x + 15, (int) spikes.get(i).y + 10, 8, 18);
+                }
+            }
+
+            // 2) Draw three stacked floor tiles exactly filling gap under player
+            if (blockImg != null) {
+                int nativeBw = blockImg.getWidth(this);
+                int nativeBh = blockImg.getHeight(this);
+                int gapHeight = getHeight() - (GROUND_Y + playerSize);
+                int scaledBh = gapHeight / 3;
+                int scaledBw = nativeBw * scaledBh / nativeBh;
+                int startY = GROUND_Y + playerSize;  // top of top block
+                int offsetX = bgOffsetX % scaledBw;
+                for (int row = 0; row < 3; row++) {
+                    int y = startY + row * scaledBh;
+                    for (int i = -1; i <= getWidth() / scaledBw + 1; i++) {
+                        g2.drawImage(blockImg, offsetX + i * scaledBw, y, scaledBw, scaledBh, null);
+                    }
+                }
+            }
+
+            // 3) Draw and rotate player icon
+            if (playerImg != null) {
+                AffineTransform old = g2.getTransform();
+                double cx = player.x + playerSize / 2.0;
+                double cy = player.y + playerSize / 2.0;
+                g2.rotate(Math.toRadians(rotation), cx, cy);
+                g2.drawImage(playerImg, (int) player.x, (int) player.y, playerSize, playerSize, null);
+                g2.setTransform(old);
+            } else {
+                g2.setColor(Color.BLUE);
+                g2.fill(player);
+            }
+
+            // 4) Debug overlay
+            g2.setColor(new Color(0, 0, 0, 200));
+            g2.fillRect(10, 10, 200, 180);
+            g2.setColor(Color.WHITE);
+            g2.setFont(new Font("Monospaced", Font.PLAIN, 12));
+            int line = 0;
+            g2.drawString(String.format("player.x   = %.1f", player.x), 15, 30 + line * 15);
+            line++;
+            g2.drawString(String.format("player.y   = %.1f", player.y), 15, 30 + line * 15);
+            line++;
+            g2.drawString("velocityY  = " + velocityY, 15, 30 + line * 15);
+            line++;
+            g2.drawString("isJump     = " + isJump, 15, 30 + line * 15);
+            line++;
+            g2.drawString(String.format("rotation   = %.1f", rotation), 15, 30 + line * 15);
+            line++;
+            g2.drawString("bgOffsetX  = " + bgOffsetX, 15, 30 + line * 15);
+            line++;
+            g2.drawString("FPS_DELAY = " + FPS_DELAY, 15, 30 + line * 15);
+            line++;
+            g2.drawString("JUMP_VELOCITY = " + JUMP_VELOCITY, 15, 30 + line * 15);
+            line++;
+            g2.drawString("GROUND_Y = " + GROUND_Y, 15, 30 + line * 15);
+            line++;
+            g2.drawString("playerSize = " + playerSize, 15, 30 + line * 15);
+            line++;
+            g2.drawString("scrollSpeed = " + scrollSpeed, 15, 30 + line * 15);
+            line++;
+
         }
-
-        // 3) Draw and rotate player icon
-        if (playerImg != null) {
-            AffineTransform old = g2.getTransform();
-            double cx = player.x + playerSize / 2.0;
-            double cy = player.y + playerSize / 2.0;
-            g2.rotate(Math.toRadians(rotation), cx, cy);
-            g2.drawImage(playerImg, (int) player.x, (int) player.y, playerSize, playerSize, null);
-            g2.setTransform(old);
-        } else {
-            g2.setColor(Color.BLUE);
-            g2.fill(player);
-        }
-
-        // 4) Debug overlay
-        g2.setColor(new Color(0, 0, 0, 200));
-        g2.fillRect(10, 10, 200, 180);
-        g2.setColor(Color.WHITE);
-        g2.setFont(new Font("Monospaced", Font.PLAIN, 12));
-        int line = 0;
-        g2.drawString(String.format("player.x   = %.1f", player.x), 15, 30 + line * 15); line++;
-        g2.drawString(String.format("player.y   = %.1f", player.y), 15, 30 + line * 15); line++;
-        g2.drawString("velocityY  = " + velocityY, 15, 30 + line * 15); line++;
-        g2.drawString("isJump     = " + isJump, 15, 30 + line * 15); line++;
-        g2.drawString(String.format("rotation   = %.1f", rotation), 15, 30 + line * 15); line++;
-        g2.drawString("bgOffsetX  = " + bgOffsetX, 15, 30 + line * 15); line++;
-        g2.drawString("FPS_DELAY = " + FPS_DELAY, 15,30 + line * 15); line++;
-        g2.drawString("JUMP_VELOCITY = " + JUMP_VELOCITY,15,30 + line * 15); line++;
-        g2.drawString("GROUND_Y = " + GROUND_Y, 15, 30 + line * 15); line++;
-        g2.drawString("playerSize = " + playerSize, 15, 30 + line * 15); line++;
-        g2.drawString("scrollSpeed = " + scrollSpeed, 15, 30 + line * 15); line++;
-
-
     }
 
     // --- KeyListener methods
