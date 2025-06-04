@@ -210,7 +210,7 @@ public class GDgraphics extends JPanel implements KeyListener {
 
         // 4) Debug overlay
         g2.setColor(new Color(0, 0, 0, 200));
-        g2.fillRect(10, 10, 200, 125);
+        g2.fillRect(10, 10, 200, 180);
         g2.setColor(Color.WHITE);
         g2.setFont(new Font("Monospaced", Font.PLAIN, 12));
         int line = 0;
@@ -219,7 +219,14 @@ public class GDgraphics extends JPanel implements KeyListener {
         g2.drawString("velocityY  = " + velocityY, 15, 30 + line * 15); line++;
         g2.drawString("isJump     = " + isJump, 15, 30 + line * 15); line++;
         g2.drawString(String.format("rotation   = %.1f", rotation), 15, 30 + line * 15); line++;
-        g2.drawString("bgOffsetX  = " + bgOffsetX, 15, 30 + line * 15);
+        g2.drawString("bgOffsetX  = " + bgOffsetX, 15, 30 + line * 15); line++;
+        g2.drawString("FPS_DELAY = " + FPS_DELAY, 15,30 + line * 15); line++;
+        g2.drawString("JUMP_VELOCITY = " + JUMP_VELOCITY,15,30 + line * 15); line++;
+        g2.drawString("GROUND_Y = " + GROUND_Y, 15, 30 + line * 15); line++;
+        g2.drawString("playerSize = " + playerSize, 15, 30 + line * 15); line++;
+        g2.drawString("scrollSpeed = " + scrollSpeed, 15, 30 + line * 15); line++;
+
+
     }
 
     // --- KeyListener methods
