@@ -45,10 +45,13 @@ public class GDgraphics extends JPanel implements KeyListener {
     private Image spike;
 
     private Image halfSpeedPortal, speedPortal1, speedPortal2, speedPortal3, speedPortal4;
+    private Image logo, playButton;
 
     // --- Scroll
     private int bgOffsetX = 0;
     private boolean running = false;
+
+    private int imageOffets1 = 40;
 
     public GDgraphics() throws UnsupportedAudioFileException, IOException {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -71,10 +74,15 @@ public class GDgraphics extends JPanel implements KeyListener {
         tracker.addImage(playerImg, 5);
         blockImg  = Toolkit.getDefaultToolkit().getImage("GDblock.png");
         tracker.addImage(blockImg, 6);
-        bgImg     = Toolkit.getDefaultToolkit().getImage("GDbackground.png");
+        bgImg = Toolkit.getDefaultToolkit().getImage("GDbackground.png");
         tracker.addImage(bgImg, 7);
         spike = Toolkit.getDefaultToolkit().getImage("GDspike.png");
         tracker.addImage(spike, 8);
+        logo = Toolkit.getDefaultToolkit().getImage("GDlogo.png");
+        tracker.addImage(logo, 9);
+        playButton = Toolkit.getDefaultToolkit().getImage("GDplaybutton.png");
+        tracker.addImage(playButton,10);
+
         try{
             tracker.waitForAll();
         } catch (InterruptedException e) {
@@ -82,18 +90,32 @@ public class GDgraphics extends JPanel implements KeyListener {
         }
         player = new Rectangle2D.Double(50, GROUND_Y, playerSize, playerSize);
 
-        try{
-            AudioInputStream sound = AudioSystem.getAudioInputStream(new File("StereoMadness.wav"));
-            if(gameState == 0) {
+        try {
+            AudioInputStream StereoMadness = AudioSystem.getAudioInputStream(new File("StereoMadness.wav"));
+            AudioInputStream MenuMusic = AudioSystem.getAudioInputStream(new File("GDmenumusic.wav"));
+
+            if (gameState == 0) {
                 backgroundMusic1 = AudioSystem.getClip();
-                backgroundMusic1.open(sound);
+                backgroundMusic1.open(MenuMusic);
+            } else if (gameState == 1) {
+                backgroundMusic2 = AudioSystem.getClip();
+                backgroundMusic2.open(StereoMadness);
             }
 
         } catch (Exception e) {
-
+            e.printStackTrace(); // Better than silent failure
         }
-        backgroundMusic1.setFramePosition(0);
-        backgroundMusic1.loop(Clip.LOOP_CONTINUOUSLY);
+
+// Only start music if successfully loaded
+        if (backgroundMusic1 != null) {
+            backgroundMusic1.setFramePosition(0);
+            backgroundMusic1.loop(Clip.LOOP_CONTINUOUSLY);
+        }
+        if (backgroundMusic2 != null) {
+            backgroundMusic2.setFramePosition(0);
+            backgroundMusic2.loop(Clip.LOOP_CONTINUOUSLY);
+        }
+
 
         spikes.add(new Rectangle2D.Double(1000, 500, 10, 20));
 
@@ -124,36 +146,40 @@ public class GDgraphics extends JPanel implements KeyListener {
         if (bgImg != null) {
             bgOffsetX = (bgOffsetX - scrollSpeed) % bgImg.getWidth(this);
         }
-        if (player.intersects(hitboxes.getFirst())){
-            System.exit(0);
-        }
-        spikes.getFirst().x -= scrollSpeed;
-        hitboxes.getFirst().x -= scrollSpeed;
+        if(gameState == 1) {
+            if (player.intersects(hitboxes.getFirst())) {
+                System.exit(0);
+            }
 
-        // Apply gravity
-        velocityY += GRAVITY;
-        player.y   += velocityY;
+            spikes.getFirst().x -= scrollSpeed;
+            hitboxes.getFirst().x -= scrollSpeed;
 
-        // Rotate mid-air
-        if (isJump) {
-            rotation = (rotation + ROT_SPEED) % 360;
-        }
+            // Apply gravity
+            velocityY += GRAVITY;
+            player.y += velocityY;
 
-        // Land on ground
-        if (player.y > GROUND_Y) {
-            player.y   = GROUND_Y;
-            velocityY  = 0;
-            isJump     = false;
-            if (rotation <= 45)
-                rotation = 0;
-            else if (rotation > 45 && rotation <= 135)
-                rotation = 90;
-            else if (rotation > 135 && rotation <= 225)
-                rotation = 180;
-            else if (rotation > 225 && rotation <= 315)
-                rotation = 270;
-            else
-                rotation = 0;
+            // Rotate mid-air
+            if (isJump) {
+                rotation = (rotation + ROT_SPEED) % 360;
+            }
+
+            // Land on ground
+            if (player.y > GROUND_Y) {
+                player.y = GROUND_Y;
+                velocityY = 0;
+                isJump = false;
+                if (rotation <= 45)
+                    rotation = 0;
+                else if (rotation > 45 && rotation <= 135)
+                    rotation = 90;
+                else if (rotation > 135 && rotation <= 225)
+                    rotation = 180;
+                else if (rotation > 225 && rotation <= 315)
+                    rotation = 270;
+                else
+                    rotation = 0;
+
+            }
         }
     }
 
@@ -163,15 +189,54 @@ public class GDgraphics extends JPanel implements KeyListener {
         Graphics2D g2 = (Graphics2D) g;
 
 
-        if (gameState == 0) {
-            // 1) Draw scrolling background
+        //------------------------------- Menu (Gamestate 0) ---------------------------------
+        if (gameState == 0){
             if (bgImg != null) {
                 int bwBg = bgImg.getWidth(this);
                 for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
                     g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), null);
                 }
             }
+            if (logo != null) {
+                int originalW = logo.getWidth(this);
+                int originalH = logo.getHeight(this);
 
+                if (originalW > 0 && originalH > 0) {
+                    // Scale to 70% of screen width
+                    int scaledW = (int)(WIDTH * 0.9);
+                    int scaledH = (int)(originalH * (scaledW / (double)originalW)); // keep aspect ratio
+
+                    // Center horizontally
+                    int logoX = (WIDTH - scaledW + imageOffets1) / 2;
+                    int logoY = 50; // small margin from the top
+
+                    g2.drawImage(logo, logoX, logoY, scaledW, scaledH, this);
+                }
+            }
+            if (playButton != null) {
+                int originalW = playButton.getWidth(this);
+                int originalH = playButton.getHeight(this);
+
+                if (originalW > 0 && originalH > 0) {
+                    // Scale to 20% of screen width
+                    int scaledW = (int)(WIDTH * 0.2);
+                    int scaledH = (int)(originalH * (scaledW / (double)originalW)); // keep aspect ratio
+
+                    // Center of screen
+                    int playX = (WIDTH - scaledW + imageOffets1) / 2;
+                    int playY = (HEIGHT - scaledH + 150) / 2;
+
+                    g2.drawImage(playButton, playX, playY, scaledW, scaledH, this);
+                }
+            }
+
+
+
+
+        }
+
+        //--------------------------- Stereo Madness (Gamestate 1) ---------------------------
+        else if (gameState == 1) {
 
             for (int i = 0; i < spikes.size(); i++) {
                 int spikeHeight = spike.getHeight(this);
@@ -214,10 +279,11 @@ public class GDgraphics extends JPanel implements KeyListener {
                 g2.setColor(Color.BLUE);
                 g2.fill(player);
             }
+        }
 
             // 4) Debug overlay
             g2.setColor(new Color(0, 0, 0, 200));
-            g2.fillRect(10, 10, 200, 180);
+            g2.fillRect(10, 10, 200, 200);
             g2.setColor(Color.WHITE);
             g2.setFont(new Font("Monospaced", Font.PLAIN, 12));
             int line = 0;
@@ -243,8 +309,10 @@ public class GDgraphics extends JPanel implements KeyListener {
             line++;
             g2.drawString("scrollSpeed = " + scrollSpeed, 15, 30 + line * 15);
             line++;
+            g2.drawString("gameState = " + gameState, 15, 30 + line * 15);
+            line++;
 
-        }
+
     }
 
     // --- KeyListener methods
