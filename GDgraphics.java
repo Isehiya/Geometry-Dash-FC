@@ -34,7 +34,7 @@ public class GDgraphics extends JPanel implements KeyListener {
     private boolean isJump   = false;
     private double rotation  = 0;
 
-    public static int gameState = 0;
+    public static int gameState = 1;
 
     Clip backgroundMusic1, backgroundMusic2;
 
@@ -237,6 +237,12 @@ public class GDgraphics extends JPanel implements KeyListener {
 
         //--------------------------- Stereo Madness (Gamestate 1) ---------------------------
         else if (gameState == 1) {
+            if (bgImg != null) {
+                int bwBg = bgImg.getWidth(this);
+                for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
+                    g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), null);
+                }
+            }
 
             for (int i = 0; i < spikes.size(); i++) {
                 int spikeHeight = spike.getHeight(this);
