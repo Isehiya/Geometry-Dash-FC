@@ -4,8 +4,14 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 public class GDMenuScreen extends JPanel implements MouseListener {
+    static JFrame menu;
+    public void displayMainMenu(){
+        menu = new JFrame();
+        menu.setSize(900, 700);
+        menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    }
     public GDMenuScreen(){
-        setPreferredSize(new Dimension(GDgraphics.WIDTH, GDgraphics.HEIGHT));
 
     }
     @Override

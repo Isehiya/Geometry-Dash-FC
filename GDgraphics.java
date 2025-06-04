@@ -5,22 +5,30 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import javax.sound.sampled.*;
+import java.util.*;
 
 public class GDgraphics extends JPanel implements KeyListener {
+
     // --- Constants
     public static final int WIDTH           = 800;
     public static final int HEIGHT          = 600;
     public static final int FPS_DELAY       = 16;      // ~60 FPS
     public static final int GRAVITY         = 1;
-    public  static final int JUMP_VELOCITY   = -15;
+    public static final int JUMP_VELOCITY   = -15;
     public static final int GROUND_Y        = 500;     // where player lands
     private static final double ROT_SPEED    = 10.0;     // deg/frame
+
+    public static final int SPIKE_HITBOX_WIDTH = 3;
+    public static final int SPIKE_HITBOX_HEIGHT = 5;
 
     public static int playerSize = 40;
     public static int scrollSpeed = 5;
 
     // --- State
     public static Rectangle2D.Double player;
+    public Rectangle2D.Double[] blocks = new Rectangle2D.Double[10000];
+    public Rectangle2D.Double[] spikes = new Rectangle2D.Double[10000];
+
     private int velocityY    = 0;
     private boolean isJump   = false;
     private double rotation  = 0;
@@ -31,6 +39,7 @@ public class GDgraphics extends JPanel implements KeyListener {
     private Image playerImg;
     private Image blockImg;
     private Image bgImg;
+    private Image spike;
 
     private Image halfSpeedPortal, speedPortal1, speedPortal2, speedPortal3, speedPortal4;
 
@@ -61,6 +70,8 @@ public class GDgraphics extends JPanel implements KeyListener {
         tracker.addImage(blockImg, 6);
         bgImg     = Toolkit.getDefaultToolkit().getImage("GDbackground.png");
         tracker.addImage(bgImg, 7);
+        spike = Toolkit.getDefaultToolkit().getImage("GDspike.png");
+        tracker.addImage(spike, 8);
         try{
             tracker.waitForAll();
         } catch (InterruptedException e) {
@@ -78,7 +89,14 @@ public class GDgraphics extends JPanel implements KeyListener {
         }
         backgroundMusic1.setFramePosition(0);
         backgroundMusic1.loop(Clip.LOOP_CONTINUOUSLY);
-    }
+
+        spikes[3] = new Rectangle2D.Double(1000, 500, 10, 20);
+
+        for (int i = 0; i < spikes.length; i++) {
+
+        }
+
+    } // Constructor
 
 
 
@@ -103,6 +121,10 @@ public class GDgraphics extends JPanel implements KeyListener {
         if (bgImg != null) {
             bgOffsetX = (bgOffsetX - scrollSpeed) % bgImg.getWidth(this);
         }
+        if (player.intersects(spikes[3])){
+            System.exit(0);
+        }
+        spikes[3].x -= scrollSpeed;
 
         // Apply gravity
         velocityY += GRAVITY;
@@ -131,7 +153,8 @@ public class GDgraphics extends JPanel implements KeyListener {
         }
     }
 
-    protected void paintComponent(Graphics g) {
+    @Override
+    public void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
@@ -140,6 +163,18 @@ public class GDgraphics extends JPanel implements KeyListener {
             int bwBg = bgImg.getWidth(this);
             for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
                 g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), null);
+            }
+        }
+
+        for (int i = 0; i < spikes.length; i++){
+            int spikeHeight = spike.getHeight(this);
+            int spikeWidth = spike.getWidth(this);
+            spikeWidth /= 3;
+            spikeHeight /= 3;
+            if (spikes[i] != null){
+                g2.drawImage(spike, (int) spikes[3].x, (int) spikes[3].y, spikeWidth, spikeHeight, this);
+                g2.setColor(Color.RED);
+                g2.drawRect((int) spikes[3].x, (int) spikes[3].y, 10, 20);
             }
         }
 
@@ -192,7 +227,7 @@ public class GDgraphics extends JPanel implements KeyListener {
         int code = e.getKeyCode();
         if ((code == KeyEvent.VK_SPACE || code == KeyEvent.VK_UP) && !isJump) {
             velocityY = JUMP_VELOCITY;
-            isJump    = true;
+            isJump   = true;
         }
     }
     public void keyReleased(KeyEvent e) {}
