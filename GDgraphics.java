@@ -53,6 +53,8 @@ public class GDgraphics extends JPanel implements KeyListener {
 
     private int imageOffets1 = 40;
 
+
+
     public GDgraphics() throws UnsupportedAudioFileException, IOException {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(Color.WHITE);
