@@ -106,9 +106,12 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             backgroundMusic1.loop(Clip.LOOP_CONTINUOUSLY);
         }
 
+        spikes.add(new Rectangle2D.Double(350, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(600, 500, 10, 20));
         spikes.add(new Rectangle2D.Double(650, 500, 10, 20));
-        spikes.add(new Rectangle2D.Double(700, 500, 10, 20));
-        spikes.add(new Rectangle2D.Double(750, 500, 10, 20));
+
+        hitboxes.add(new Rectangle2D.Double(355, 510 , 7, 18));
+        hitboxes.add(new Rectangle2D.Double(605, 510 , 7, 18));
         hitboxes.add(new Rectangle2D.Double(655, 510 , 7, 18));
     }
 
@@ -142,6 +145,17 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             }
             for (int i = 0; i < spikes.size(); i++) {
                 spikes.get(i).x -= scrollSpeed;
+            }
+            for (int i = 0; i < blocks.size(); i++) {
+                if(player.intersects(blocks.get(i))){
+                    if (player.y > blocks.get(i).y){
+                        System.exit(0);
+                    }
+                    else{
+                        isJump = false;
+                    }
+                }
+                blocks.get(i).x -= scrollSpeed;
             }
 
             velocityY += GRAVITY;
