@@ -12,13 +12,10 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
     public static final int FPS_DELAY = 16;
-    public static final double GRAVITY = 0.5;
-    public static final double JUMP_VELOCITY = -10;
+    public static final int GRAVITY = 1;
+    public static final int JUMP_VELOCITY = -15;
     public static final int GROUND_Y = 500;
-    private static final double ROT_SPEED = 5.0;
-
-    public static final int CUBE = 1;
-    public static final int SHIP = 2;
+    private static final double ROT_SPEED = 10.0;
 
     public static int playerSize = 40;
     public static int scrollSpeed = 5;
@@ -28,7 +25,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     public ArrayList<Rectangle2D.Double> spikes = new ArrayList<>();
     public ArrayList<Rectangle2D.Double> hitboxes = new ArrayList<>();
 
-    private double velocityY = 0;
+    private int velocityY = 0;
     private boolean isJump = false;
     private double rotation = 0;
 
@@ -38,7 +35,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
     private Image playerImg, blockImg, bgImg, spike;
     private Image halfSpeedPortal, speedPortal1, speedPortal2, speedPortal3, speedPortal4;
-    private Image logo, playButton, shipPortal;
+    private Image logo, playButton;
 
     private int bgOffsetX = 0;
     private boolean running = false;
@@ -47,6 +44,9 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
     private Rectangle playButtonBounds;
     private boolean hoveringPlay = false;
+    private double playScale = 1.0;
+    private double targetScale = 1.0;
+    private final double scaleStep = 0.05;
 
     public GDgraphics() throws UnsupportedAudioFileException, IOException {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -79,8 +79,6 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         tracker.addImage(logo, 9);
         playButton = Toolkit.getDefaultToolkit().getImage("GDplaybutton.png");
         tracker.addImage(playButton, 10);
-        shipPortal = Toolkit.getDefaultToolkit().getImage("GDshipportal.gif");
-        tracker.addImage(shipPortal, 11);
 
         try {
             tracker.waitForAll();
@@ -106,19 +104,12 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             backgroundMusic1.loop(Clip.LOOP_CONTINUOUSLY);
         }
 
-        spikes.add(new Rectangle2D.Double(350, 500, 10, 20));
-        spikes.add(new Rectangle2D.Double(800, 500, 10, 20));
-        spikes.add(new Rectangle2D.Double(850, 500, 10, 20));
-        spikes.add(new Rectangle2D.Double(1250, 500, 10, 20));
-        spikes.add(new Rectangle2D.Double(1300, 500, 10, 20));
-
-        hitboxes.add(new Rectangle2D.Double(355, 510 , 7, 18));
-        hitboxes.add(new Rectangle2D.Double(805, 510 , 7, 18));
-        hitboxes.add(new Rectangle2D.Double(855, 510 , 7, 18));
-        hitboxes.add(new Rectangle2D.Double(1255, 510 , 7, 18));
-        hitboxes.add(new Rectangle2D.Double(1305, 510 , 7, 18));
-
-        blocks.add(new Rectangle2D.Double(1350, 500, 40, 40));
+        spikes.add(new Rectangle2D.Double(1000, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(1050, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(1100, 500, 10, 20));
+        hitboxes.add(new Rectangle2D.Double(1015, 510 , 7, 18));
+        hitboxes.add(new Rectangle2D.Double(1065, 510 , 7, 18));
+        hitboxes.add(new Rectangle2D.Double(1115, 510 , 7, 18));
     }
 
     public void startGameLoop() {
@@ -141,28 +132,28 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         if (bgImg != null) {
             bgOffsetX = (bgOffsetX - scrollSpeed) % bgImg.getWidth(this);
         }
-        if(gameState == 1) {
 
-            for (int i = 0; i < hitboxes.size(); i++) {
+        if (gameState == 0) {
+            if (hoveringPlay) {
+                targetScale = 1.2;
+            } else {
+                targetScale = 1.0;
+            }
+            if (Math.abs(playScale - targetScale) > 0.01) {
+                if (playScale < targetScale) playScale += scaleStep;
+                else if (playScale > targetScale) playScale -= scaleStep;
+            } else {
+                playScale = targetScale;
+            }
+        }
+
+        if(gameState == 1) {
+            for (int i = 0; i < spikes.size(); i++) {
                 if (player.intersects(hitboxes.get(i))) {
                     System.exit(0);
                 }
-                hitboxes.get(i).x -= scrollSpeed;
-            }
-            for (int i = 0; i < spikes.size(); i++) {
                 spikes.get(i).x -= scrollSpeed;
-            }
-            for (int i = 0; i < blocks.size(); i++) {
-                if(player.intersects(blocks.get(i))){
-                    if (player.y > blocks.get(i).y){
-                        System.exit(0);
-                    }
-                    else{
-                        isJump = false;
-                        velocityY = 0;
-                    }
-                }
-                blocks.get(i).x -= scrollSpeed;
+                hitboxes.get(i).x -= scrollSpeed;
             }
 
             velocityY += GRAVITY;
@@ -186,17 +177,18 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     }
 
     @Override
-    public void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        if (gameState == 0) {
-            if (bgImg != null) {
-                int bwBg = bgImg.getWidth(this);
-                for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
-                    g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), null);
-                }
+        if (bgImg != null) {
+            int bwBg = bgImg.getWidth(this);
+            for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
+                g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), null);
             }
+        }
+
+        if (gameState == 0) {
             if (logo != null) {
                 int originalW = logo.getWidth(this);
                 int originalH = logo.getHeight(this);
@@ -212,8 +204,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 int originalW = playButton.getWidth(this);
                 int originalH = playButton.getHeight(this);
                 if (originalW > 0 && originalH > 0) {
-                    double scale = hoveringPlay ? 1.2 : 1.0;
-                    int scaledW = (int)(WIDTH * 0.2 * scale);
+                    int scaledW = (int)(WIDTH * 0.2 * playScale);
                     int scaledH = (int)(originalH * (scaledW / (double)originalW));
                     int playX = (WIDTH - scaledW + imageOffets1) / 2;
                     int playY = (HEIGHT - scaledH + 150) / 2;
@@ -222,12 +213,6 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 }
             }
         } else if (gameState == 1) {
-            if (bgImg != null) {
-                int bwBg = bgImg.getWidth(this);
-                for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
-                    g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), null);
-                }
-            }
             for (Rectangle2D.Double spikeRect : spikes) {
                 int spikeHeight = spike.getHeight(this);
                 int spikeWidth = spike.getWidth(this);
@@ -235,6 +220,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 spikeHeight /= 3;
                 g2.drawImage(spike, (int) spikeRect.x, (int) spikeRect.y, spikeWidth, spikeHeight, this);
             }
+
             if (blockImg != null) {
                 int nativeBw = blockImg.getWidth(this);
                 int nativeBh = blockImg.getHeight(this);
@@ -249,10 +235,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                         g2.drawImage(blockImg, offsetX + i * scaledBw, y, scaledBw, scaledBh, null);
                     }
                 }
-                for(Rectangle2D.Double r: blocks){
-                    g2.drawImage(blockImg, (int) r.x, (int) r.y, scaledBw, scaledBh, this);
-                }
             }
+
             if (playerImg != null) {
                 AffineTransform old = g2.getTransform();
                 double cx = player.x + playerSize / 2.0;
@@ -274,12 +258,9 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             isJump = true;
         }
     }
-    public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_SPACE)
-            isJump = false;
-    }
-    public void keyTyped(KeyEvent e) {}
 
+    public void keyReleased(KeyEvent e) {}
+    public void keyTyped(KeyEvent e) {}
     public void mouseMoved(MouseEvent e) {
         if (playButtonBounds != null && playButtonBounds.contains(e.getPoint())) hoveringPlay = true;
         else hoveringPlay = false;
