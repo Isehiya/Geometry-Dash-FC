@@ -107,12 +107,18 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         }
 
         spikes.add(new Rectangle2D.Double(350, 500, 10, 20));
-        spikes.add(new Rectangle2D.Double(600, 500, 10, 20));
-        spikes.add(new Rectangle2D.Double(650, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(800, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(850, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(1250, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(1300, 500, 10, 20));
 
         hitboxes.add(new Rectangle2D.Double(355, 510 , 7, 18));
-        hitboxes.add(new Rectangle2D.Double(605, 510 , 7, 18));
-        hitboxes.add(new Rectangle2D.Double(655, 510 , 7, 18));
+        hitboxes.add(new Rectangle2D.Double(805, 510 , 7, 18));
+        hitboxes.add(new Rectangle2D.Double(855, 510 , 7, 18));
+        hitboxes.add(new Rectangle2D.Double(1255, 510 , 7, 18));
+        hitboxes.add(new Rectangle2D.Double(1305, 510 , 7, 18));
+
+        blocks.add(new Rectangle2D.Double(1350, 500, 40, 40));
     }
 
     public void startGameLoop() {
@@ -153,6 +159,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                     }
                     else{
                         isJump = false;
+                        velocityY = 0;
                     }
                 }
                 blocks.get(i).x -= scrollSpeed;
@@ -241,6 +248,9 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                     for (int i = -1; i <= getWidth() / scaledBw + 1; i++) {
                         g2.drawImage(blockImg, offsetX + i * scaledBw, y, scaledBw, scaledBh, null);
                     }
+                }
+                for(Rectangle2D.Double r: blocks){
+                    g2.drawImage(blockImg, (int) r.x, (int) r.y, scaledBw, scaledBh, this);
                 }
             }
             if (playerImg != null) {
