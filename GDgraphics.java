@@ -135,7 +135,6 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         spikes.add(new Rectangle2D.Double(850, 500, 10, 20));
         spikes.add(new Rectangle2D.Double(1250, 500, 10, 20));
         spikes.add(new Rectangle2D.Double(1300, 500, 10, 20));
-        spikes.add(new Rectangle2D.Double(1350, 500, 10, 20));
 
 
         hitboxes.add(new Rectangle2D.Double(355, 510 , 7, 18));
@@ -190,6 +189,23 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 }
                 spikes.get(i).x -= scrollSpeed;
                 hitboxes.get(i).x -= scrollSpeed;
+            }
+            for (int i = 0; i < blocks.size(); i++) {
+                if(player.intersects(blocks.get(i))){
+                    if(player.y > blocks.get(i).y)
+                        System.exit(0);
+                    else{
+                        player.y = blocks.get(i).y - 40;
+                        velocityY = 0;
+                        isJump = false;
+                        if (rotation <= 45) rotation = 0;
+                        else if (rotation <= 135) rotation = 90;
+                        else if (rotation <= 225) rotation = 180;
+                        else if (rotation <= 315) rotation = 270;
+                        else rotation = 0;
+                    }
+                }
+                blocks.get(i).x -= scrollSpeed;
             }
 
             velocityY += GRAVITY;
@@ -306,6 +322,9 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                     for (int i = -1; i <= getWidth() / scaledBw + 1; i++) {
                         g2.drawImage(blockImg, offsetX + i * scaledBw, y, scaledBw, scaledBh, null);
                     }
+                }
+                for(Rectangle2D.Double r: blocks){
+                    g2.drawImage(blockImg, (int) r.x, (int) r.y, scaledBw, scaledBh, this);
                 }
             }
 
