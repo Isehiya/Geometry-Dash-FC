@@ -43,10 +43,28 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private int imageOffets1 = 40;
 
     private Rectangle playButtonBounds;
+    private Rectangle iconMenuButtonBounds;
+    private Rectangle creatorMenuButtonBounds;
     private boolean hoveringPlay = false;
     private double playScale = 1.0;
-    private double targetScale = 1.0;
+
+    private boolean hoveringIcon = false;
+    private double iconScale = 0.8;
+    private boolean hoveringCreator = false;
     private final double scaleStep = 0.05;
+
+    private double targetScale = 1.0;
+    // Play button scale limits
+    private static final double PLAY_SCALE_MAX = 1.2;
+    private static final double PLAY_SCALE_MIN = 1.0;
+
+    // Icon button scale limits
+    private static final double ICON_SCALE_MAX = 1.0;
+    private static final double ICON_SCALE_MIN = 0.80;
+
+// (Optional) Add creator button limits here too later
+
+
 
     public GDgraphics() throws UnsupportedAudioFileException, IOException {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -150,17 +168,12 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         }
 
         if (gameState == 0) {
-            if (hoveringPlay) {
-                targetScale = 1.2;
-            } else {
-                targetScale = 1.0;
-            }
-            if (Math.abs(playScale - targetScale) > 0.01) {
-                if (playScale < targetScale) playScale += scaleStep;
-                else if (playScale > targetScale) playScale -= scaleStep;
-            } else {
-                playScale = targetScale;
-            }
+            if (hoveringPlay && playScale < PLAY_SCALE_MAX) playScale += scaleStep;
+            else if (!hoveringPlay && playScale > PLAY_SCALE_MIN) playScale -= scaleStep;
+
+            if (hoveringIcon && iconScale < ICON_SCALE_MAX) iconScale += scaleStep;
+            else if (!hoveringIcon && iconScale > ICON_SCALE_MIN) iconScale -= scaleStep;
+
         }
 
         if(gameState == 1) {
@@ -229,6 +242,19 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                     g2.drawImage(playButton, playX, playY, scaledW, scaledH, this);
                 }
             }
+            if (iconMenuButton != null){
+                int originalW = iconMenuButton.getWidth(this);
+                int originalH = iconMenuButton.getHeight(this);
+                if (originalW > 0 && originalH > 0){
+                    int scaledW = (int)(WIDTH * 0.2 * iconScale);
+                    int scaledH = (int)(originalH * (scaledW / (double)originalW));
+                    int iconX = (WIDTH - scaledW + imageOffets1 - 400) / 2;
+                    int iconY = (HEIGHT - scaledH + 150) / 2;
+                    iconMenuButtonBounds = new Rectangle(iconX, iconY, scaledW, scaledH);
+                    g2.drawImage(iconMenuButton, iconX, iconY, scaledW, scaledH, this);
+                }
+            }
+
 
         }
         else if (gameState == 1) {
@@ -289,12 +315,26 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     public void keyReleased(KeyEvent e) {}
     public void keyTyped(KeyEvent e) {}
     public void mouseMoved(MouseEvent e) {
-        if (playButtonBounds != null && playButtonBounds.contains(e.getPoint())) hoveringPlay = true;
-        else hoveringPlay = false;
+        Point point = e.getPoint();
+        hoveringPlay = playButtonBounds != null && playButtonBounds.contains(point);
+        hoveringIcon = iconMenuButtonBounds != null && iconMenuButtonBounds.contains(point);
     }
+
+
     public void mouseDragged(MouseEvent e) {}
     public void mouseClicked(MouseEvent e) {
         if (gameState == 0 && playButtonBounds != null && playButtonBounds.contains(e.getPoint())) {
+            gameState = 1;
+            if (backgroundMusic1 != null && backgroundMusic1.isRunning()) {
+                backgroundMusic1.stop();
+            }
+            if (backgroundMusic2 != null && !backgroundMusic2.isRunning()) {
+                backgroundMusic2.setFramePosition(0);
+                backgroundMusic2.loop(Clip.LOOP_CONTINUOUSLY);
+            }
+        }
+
+        if (gameState == 0 && iconMenuButtonBounds != null && iconMenuButtonBounds.contains(e.getPoint())) {
             gameState = 1;
             if (backgroundMusic1 != null && backgroundMusic1.isRunning()) {
                 backgroundMusic1.stop();
