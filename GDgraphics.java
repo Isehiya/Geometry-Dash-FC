@@ -147,6 +147,10 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
 
         blocks.add(new Rectangle2D.Double(1350, 500, 40, 40));
+        blocks.add(new Rectangle2D.Double(1500, 500, 40, 40));
+        blocks.add(new Rectangle2D.Double(1500, 450, 40, 40));
+
+
     }
 
     public void startGameLoop() {
