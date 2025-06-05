@@ -17,6 +17,9 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     public static final int GROUND_Y = 500;
     private static final double ROT_SPEED = 10.0;
 
+    public static final int CUBE = 1;
+    public static final int SHIP = 2;
+
     public static int playerSize = 40;
     public static int scrollSpeed = 5;
 
@@ -35,7 +38,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
     private Image playerImg, blockImg, bgImg, spike;
     private Image halfSpeedPortal, speedPortal1, speedPortal2, speedPortal3, speedPortal4;
-    private Image logo, playButton;
+    private Image logo, playButton, shipPortal;
 
     private int bgOffsetX = 0;
     private boolean running = false;
@@ -76,6 +79,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         tracker.addImage(logo, 9);
         playButton = Toolkit.getDefaultToolkit().getImage("GDplaybutton.png");
         tracker.addImage(playButton, 10);
+        shipPortal = Toolkit.getDefaultToolkit().getImage("GDshipportal.gif");
+        tracker.addImage(shipPortal, 11);
 
         try {
             tracker.waitForAll();
