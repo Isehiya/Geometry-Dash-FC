@@ -346,7 +346,6 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         }
 
     }
-
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
         if ((code == KeyEvent.VK_SPACE || code == KeyEvent.VK_UP) && !isJump) {
