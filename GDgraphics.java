@@ -12,10 +12,10 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
     public static final int FPS_DELAY = 16;
-    public static final int GRAVITY = 1;
-    public static final int JUMP_VELOCITY = -15;
+    public static final double GRAVITY = 0.5;
+    public static final double JUMP_VELOCITY = -10;
     public static final int GROUND_Y = 500;
-    private static final double ROT_SPEED = 10.0;
+    private static final double ROT_SPEED = 5.0;
 
     public static final int CUBE = 1;
     public static final int SHIP = 2;
@@ -28,7 +28,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     public ArrayList<Rectangle2D.Double> spikes = new ArrayList<>();
     public ArrayList<Rectangle2D.Double> hitboxes = new ArrayList<>();
 
-    private int velocityY = 0;
+    private double velocityY = 0;
     private boolean isJump = false;
     private double rotation = 0;
 
@@ -106,8 +106,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             backgroundMusic1.loop(Clip.LOOP_CONTINUOUSLY);
         }
 
-        spikes.add(new Rectangle2D.Double(1000, 500, 10, 20));
-        hitboxes.add(new Rectangle2D.Double(1015, 510 , 7, 18));
+        spikes.add(new Rectangle2D.Double(650, 500, 10, 20));
+        hitboxes.add(new Rectangle2D.Double(655, 510 , 7, 18));
     }
 
     public void startGameLoop() {
