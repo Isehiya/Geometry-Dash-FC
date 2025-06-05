@@ -320,6 +320,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 g2.fill(player);
             }
         }
+
     }
 
     public void keyPressed(KeyEvent e) {
