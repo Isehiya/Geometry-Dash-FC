@@ -104,12 +104,19 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             backgroundMusic1.loop(Clip.LOOP_CONTINUOUSLY);
         }
 
-        spikes.add(new Rectangle2D.Double(1000, 500, 10, 20));
-        spikes.add(new Rectangle2D.Double(1050, 500, 10, 20));
-        spikes.add(new Rectangle2D.Double(1100, 500, 10, 20));
-        hitboxes.add(new Rectangle2D.Double(1015, 510 , 7, 18));
-        hitboxes.add(new Rectangle2D.Double(1065, 510 , 7, 18));
-        hitboxes.add(new Rectangle2D.Double(1115, 510 , 7, 18));
+        spikes.add(new Rectangle2D.Double(350, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(800, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(850, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(1250, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(1300, 500, 10, 20));
+
+        hitboxes.add(new Rectangle2D.Double(355, 510 , 7, 18));
+        hitboxes.add(new Rectangle2D.Double(805, 510 , 7, 18));
+        hitboxes.add(new Rectangle2D.Double(855, 510 , 7, 18));
+        hitboxes.add(new Rectangle2D.Double(1255, 510 , 7, 18));
+        hitboxes.add(new Rectangle2D.Double(1305, 510 , 7, 18));
+
+        blocks.add(new Rectangle2D.Double(1350, 500, 40, 40));
     }
 
     public void startGameLoop() {
