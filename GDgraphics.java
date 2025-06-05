@@ -35,7 +35,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
     private Image playerImg, blockImg, bgImg, spike;
     private Image halfSpeedPortal, speedPortal1, speedPortal2, speedPortal3, speedPortal4;
-    private Image logo, playButton;
+    private Image logo, playButton, iconMenuButton, creatorMenuButton;
 
     private int bgOffsetX = 0;
     private boolean running = false;
@@ -79,6 +79,10 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         tracker.addImage(logo, 9);
         playButton = Toolkit.getDefaultToolkit().getImage("GDplaybutton.png");
         tracker.addImage(playButton, 10);
+        iconMenuButton = Toolkit.getDefaultToolkit().getImage("GDiconchoosingbutton.png");
+        tracker.addImage(iconMenuButton, 11);
+        creatorMenuButton = Toolkit.getDefaultToolkit().getImage("GDcreatormenubutton.png");
+        tracker.addImage(creatorMenuButton, 12);
 
         try {
             tracker.waitForAll();
@@ -188,14 +192,15 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        if (bgImg != null) {
-            int bwBg = bgImg.getWidth(this);
-            for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
-                g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), null);
-            }
-        }
-
         if (gameState == 0) {
+            //moves the background backwards
+            if (bgImg != null) {
+                int bwBg = bgImg.getWidth(this);
+                for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
+                    g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), null);
+                }
+            }
+
             if (logo != null) {
                 int originalW = logo.getWidth(this);
                 int originalH = logo.getHeight(this);
@@ -219,7 +224,17 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                     g2.drawImage(playButton, playX, playY, scaledW, scaledH, this);
                 }
             }
-        } else if (gameState == 1) {
+
+        }
+        else if (gameState == 1) {
+            //moves the background backwards
+            if (bgImg != null) {
+                int bwBg = bgImg.getWidth(this);
+                for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
+                    g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), null);
+                }
+            }
+
             for (Rectangle2D.Double spikeRect : spikes) {
                 int spikeHeight = spike.getHeight(this);
                 int spikeWidth = spike.getWidth(this);
