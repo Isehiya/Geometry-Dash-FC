@@ -352,9 +352,11 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     }
 
     public void keyReleased(KeyEvent e) {
-        for(Rectangle2D.Double block: blocks){
-            if(player.intersects(block) || player.y >= 500){
-                isJump = false;
+        if (e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_UP) {
+            for (Rectangle2D.Double block : blocks) {
+                if (player.intersects(block) || player.y >= 500) {
+                    isJump = false;
+                }
             }
         }
     }
