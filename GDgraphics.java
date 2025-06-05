@@ -62,7 +62,10 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private static final double ICON_SCALE_MAX = 1.0;
     private static final double ICON_SCALE_MIN = 0.80;
 
-// (Optional) Add creator button limits here too later
+    private static final double CREATOR_SCALE_MAX = 1.0;
+    private static final double CREATOR_SCALE_MIN = 0.80;
+    private double creatorScale = 0.8;
+
 
 
 
@@ -97,9 +100,9 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         tracker.addImage(logo, 9);
         playButton = Toolkit.getDefaultToolkit().getImage("GDplaybutton.png");
         tracker.addImage(playButton, 10);
-        iconMenuButton = Toolkit.getDefaultToolkit().getImage("GDiconchoosingbutton.png");
+        iconMenuButton = Toolkit.getDefaultToolkit().getImage("GDiconchoosingbutton2.png");
         tracker.addImage(iconMenuButton, 11);
-        creatorMenuButton = Toolkit.getDefaultToolkit().getImage("GDcreatormenubutton.png");
+        creatorMenuButton = Toolkit.getDefaultToolkit().getImage("GDcreatormenubutton2.png");
         tracker.addImage(creatorMenuButton, 12);
 
         try {
@@ -173,6 +176,9 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
             if (hoveringIcon && iconScale < ICON_SCALE_MAX) iconScale += scaleStep;
             else if (!hoveringIcon && iconScale > ICON_SCALE_MIN) iconScale -= scaleStep;
+
+            if (hoveringCreator && creatorScale < CREATOR_SCALE_MAX) creatorScale += scaleStep;
+            else if (!hoveringCreator && creatorScale > CREATOR_SCALE_MIN) creatorScale -= scaleStep;
 
         }
 
@@ -254,6 +260,18 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                     g2.drawImage(iconMenuButton, iconX, iconY, scaledW, scaledH, this);
                 }
             }
+            if (creatorMenuButton != null){
+                int originalW = creatorMenuButton.getWidth(this);
+                int originalH = creatorMenuButton.getHeight(this);
+                if (originalW > 0 && originalH > 0){
+                    int scaledW = (int)(WIDTH * 0.2 * creatorScale);
+                    int scaledH = (int)(originalH * (scaledW / (double)originalW));
+                    int iconX = (WIDTH - scaledW + imageOffets1 + 400) / 2;
+                    int iconY = (HEIGHT - scaledH + 150) / 2;
+                    creatorMenuButtonBounds = new Rectangle(iconX, iconY, scaledW, scaledH);
+                    g2.drawImage(creatorMenuButton, iconX, iconY, scaledW, scaledH, this);
+                }
+            }
 
 
         }
@@ -318,6 +336,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         Point point = e.getPoint();
         hoveringPlay = playButtonBounds != null && playButtonBounds.contains(point);
         hoveringIcon = iconMenuButtonBounds != null && iconMenuButtonBounds.contains(point);
+        hoveringCreator = (creatorMenuButtonBounds != null && creatorMenuButtonBounds.contains(point));
     }
 
 
@@ -335,6 +354,17 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         }
 
         if (gameState == 0 && iconMenuButtonBounds != null && iconMenuButtonBounds.contains(e.getPoint())) {
+            gameState = 1;
+            if (backgroundMusic1 != null && backgroundMusic1.isRunning()) {
+                backgroundMusic1.stop();
+            }
+            if (backgroundMusic2 != null && !backgroundMusic2.isRunning()) {
+                backgroundMusic2.setFramePosition(0);
+                backgroundMusic2.loop(Clip.LOOP_CONTINUOUSLY);
+            }
+        }
+
+        if (gameState == 0 && creatorMenuButtonBounds != null && creatorMenuButtonBounds.contains(e.getPoint())) {
             gameState = 1;
             if (backgroundMusic1 != null && backgroundMusic1.isRunning()) {
                 backgroundMusic1.stop();
