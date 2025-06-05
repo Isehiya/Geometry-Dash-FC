@@ -40,7 +40,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private int bgOffsetX = 0;
     private boolean running = false;
 
-    private int imageOffets1 = 40;
+    private int imageOffets1 = 55;
 
     private Rectangle playButtonBounds;
     private Rectangle iconMenuButtonBounds;
@@ -120,6 +120,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             backgroundMusic1.open(MenuMusic);
             backgroundMusic2 = AudioSystem.getClip();
             backgroundMusic2.open(StereoMadness);
+
         } catch (Exception e) {
             e.printStackTrace();
         }
