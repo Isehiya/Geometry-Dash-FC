@@ -107,6 +107,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         }
 
         spikes.add(new Rectangle2D.Double(650, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(700, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(750, 500, 10, 20));
         hitboxes.add(new Rectangle2D.Double(655, 510 , 7, 18));
     }
 
@@ -131,11 +133,16 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             bgOffsetX = (bgOffsetX - scrollSpeed) % bgImg.getWidth(this);
         }
         if(gameState == 1) {
-            if (player.intersects(hitboxes.getFirst())) {
-                System.exit(0);
+
+            for (int i = 0; i < hitboxes.size(); i++) {
+                if (player.intersects(hitboxes.get(i))) {
+                    System.exit(0);
+                }
+                hitboxes.get(i).x -= scrollSpeed;
             }
-            spikes.getFirst().x -= scrollSpeed;
-            hitboxes.getFirst().x -= scrollSpeed;
+            for (int i = 0; i < spikes.size(); i++) {
+                spikes.get(i).x -= scrollSpeed;
+            }
 
             velocityY += GRAVITY;
             player.y += velocityY;
