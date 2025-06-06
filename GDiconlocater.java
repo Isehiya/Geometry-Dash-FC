@@ -48,7 +48,7 @@ public class GDiconlocater {
         if (indigo2) { secondColorName = "indigo"; secondLetter = 'I'; }
         if (violet2) { secondColorName = "violet"; secondLetter = 'V'; }
         if (white2)  { secondColorName = "white";  secondLetter = 'W'; }
-        if (black2)  { secondColorName = "black";  secondLetter = 'B'; }
+        if (black2)  { secondColorName = "black";  secondLetter = '0'; }
 
         // Build the two-letter code
         String twoLetterCode = "" + firstLetter + secondLetter;
