@@ -37,7 +37,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private Image halfSpeedPortal, speedPortal1, speedPortal2, speedPortal3, speedPortal4;
     private Image logo, playButton, iconMenuButton, creatorMenuButton;
 
-    ArrayList<Image> icons = new ArrayList<>();
+    ArrayList<String> icons = new ArrayList<>();
 
     private int bgOffsetX = 0;
     private boolean running = false;
@@ -80,6 +80,10 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         addKeyListener(this);
         addMouseListener(this);
         addMouseMotionListener(this);
+
+            icons.add(0,"1");
+            icons.add(1,"2");
+
 
         MediaTracker tracker = new MediaTracker(this);
         halfSpeedPortal = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDspeedportal0.5.gif");
