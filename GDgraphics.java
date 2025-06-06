@@ -37,6 +37,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private Image halfSpeedPortal, speedPortal1, speedPortal2, speedPortal3, speedPortal4;
     private Image logo, playButton, iconMenuButton, creatorMenuButton;
 
+    ArrayList<Image> icons = new ArrayList<>();
+
     private int bgOffsetX = 0;
     private boolean running = false;
 
@@ -65,7 +67,6 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private static final double CREATOR_SCALE_MAX = 1.0;
     private static final double CREATOR_SCALE_MIN = 0.80;
     private double creatorScale = 0.8;
-
 
 
 
@@ -107,6 +108,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         tracker.addImage(iconMenuButton, 11);
         creatorMenuButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDcreatormenubutton2.png");
         tracker.addImage(creatorMenuButton, 12);
+
+
 
         try {
             tracker.waitForAll();
