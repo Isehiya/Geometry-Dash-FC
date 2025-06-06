@@ -34,6 +34,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     public static int gameState = 0;
 
     Clip backgroundMusic1, backgroundMusic2;
+    Clip buttonHover;
 
     private Image playerImg, blockImg, bgImg, spike;
     private Image halfSpeedPortal, speedPortal1, speedPortal2, speedPortal3, speedPortal4;
@@ -117,6 +118,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
 
 
+
         try {
             tracker.waitForAll();
         } catch (InterruptedException e) {
@@ -128,10 +130,13 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         try {
             AudioInputStream StereoMadness = AudioSystem.getAudioInputStream(new File("sfx/StereoMadness.wav"));
             AudioInputStream MenuMusic = AudioSystem.getAudioInputStream(new File("sfx/GDmenumusic.wav"));
+            AudioInputStream HoveringButton = AudioSystem.getAudioInputStream(new File("sfx/GDbuttonhover.wav"));
             backgroundMusic1 = AudioSystem.getClip();
             backgroundMusic1.open(MenuMusic);
             backgroundMusic2 = AudioSystem.getClip();
             backgroundMusic2.open(StereoMadness);
+            buttonHover = AudioSystem.getClip();
+            buttonHover.open(HoveringButton);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -358,6 +363,19 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         }
 
     }
+
+    private boolean wasHoveringPlay    = false;
+    private boolean wasHoveringIcon    = false;
+    private boolean wasHoveringCreator = false;
+
+
+    private void playClipFromStart(Clip c) {
+        if (c == null) return;
+        if (c.isRunning()) c.stop();
+        c.setFramePosition(0);
+        c.start();
+    }
+
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
         if ((code == KeyEvent.VK_SPACE || code == KeyEvent.VK_UP) && !isJump) {
@@ -377,10 +395,28 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     }
     public void keyTyped(KeyEvent e) {}
     public void mouseMoved(MouseEvent e) {
-        Point point = e.getPoint();
-        hoveringPlay = playButtonBounds != null && playButtonBounds.contains(point);
-        hoveringIcon = iconMenuButtonBounds != null && iconMenuButtonBounds.contains(point);
-        hoveringCreator = (creatorMenuButtonBounds != null && creatorMenuButtonBounds.contains(point));
+        Point p = e.getPoint();
+
+        // Determine current hover state
+        boolean nowHoveringPlay    = playButtonBounds    != null && playButtonBounds.contains(p);
+        boolean nowHoveringIcon    = iconMenuButtonBounds   != null && iconMenuButtonBounds.contains(p);
+        boolean nowHoveringCreator = creatorMenuButtonBounds!= null && creatorMenuButtonBounds.contains(p);
+
+        // Play SFX on the instant we enter each button
+        if (nowHoveringPlay && !hoveringPlay) {
+            playClipFromStart(buttonHover);
+        }
+        if (nowHoveringIcon && !hoveringIcon) {
+            playClipFromStart(buttonHover);
+        }
+        if (nowHoveringCreator && !hoveringCreator) {
+            playClipFromStart(buttonHover);
+        }
+
+        // **Update the actual hover flags** so updateGame() can animate scales
+        hoveringPlay    = nowHoveringPlay;
+        hoveringIcon    = nowHoveringIcon;
+        hoveringCreator = nowHoveringCreator;
     }
 
 
