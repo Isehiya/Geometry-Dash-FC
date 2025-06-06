@@ -81,31 +81,31 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         addMouseMotionListener(this);
 
         MediaTracker tracker = new MediaTracker(this);
-        halfSpeedPortal = Toolkit.getDefaultToolkit().getImage("GDspeedportal0.5.gif");
+        halfSpeedPortal = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDspeedportal0.5.gif");
         tracker.addImage(halfSpeedPortal, 0);
-        speedPortal1 = Toolkit.getDefaultToolkit().getImage("GDspeedportal1.gif");
+        speedPortal1 = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDspeedportal1.gif");
         tracker.addImage(speedPortal1, 1);
-        speedPortal2 = Toolkit.getDefaultToolkit().getImage("GDspeedportal2.gif");
+        speedPortal2 = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDspeedportal2.gif");
         tracker.addImage(speedPortal2, 2);
-        speedPortal3 = Toolkit.getDefaultToolkit().getImage("GDspeedportal3.gif");
+        speedPortal3 = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDspeedportal3.gif");
         tracker.addImage(speedPortal3, 3);
-        speedPortal4 = Toolkit.getDefaultToolkit().getImage("GDspeedportal4.gif");
+        speedPortal4 = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDspeedportal4.gif");
         tracker.addImage(speedPortal4, 4);
-        playerImg = Toolkit.getDefaultToolkit().getImage("GDdefaulticon.png");
+        playerImg = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDdefaulticon.png");
         tracker.addImage(playerImg, 5);
-        blockImg = Toolkit.getDefaultToolkit().getImage("GDblock.png");
+        blockImg = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDblock.png");
         tracker.addImage(blockImg, 6);
-        bgImg = Toolkit.getDefaultToolkit().getImage("GDbackground.png");
+        bgImg = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDbackground.png");
         tracker.addImage(bgImg, 7);
-        spike = Toolkit.getDefaultToolkit().getImage("GDspike.png");
+        spike = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDspike.png");
         tracker.addImage(spike, 8);
-        logo = Toolkit.getDefaultToolkit().getImage("GDlogo.png");
+        logo = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDlogo.png");
         tracker.addImage(logo, 9);
-        playButton = Toolkit.getDefaultToolkit().getImage("GDplaybutton.png");
+        playButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDplaybutton.png");
         tracker.addImage(playButton, 10);
-        iconMenuButton = Toolkit.getDefaultToolkit().getImage("GDiconchoosingbutton2.png");
+        iconMenuButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDiconchoosingbutton2.png");
         tracker.addImage(iconMenuButton, 11);
-        creatorMenuButton = Toolkit.getDefaultToolkit().getImage("GDcreatormenubutton2.png");
+        creatorMenuButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDcreatormenubutton2.png");
         tracker.addImage(creatorMenuButton, 12);
 
         try {
@@ -117,8 +117,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         player = new Rectangle2D.Double(50, GROUND_Y, playerSize, playerSize);
 
         try {
-            AudioInputStream StereoMadness = AudioSystem.getAudioInputStream(new File("StereoMadness.wav"));
-            AudioInputStream MenuMusic = AudioSystem.getAudioInputStream(new File("GDmenumusic.wav"));
+            AudioInputStream StereoMadness = AudioSystem.getAudioInputStream(new File("sfx/StereoMadness.wav"));
+            AudioInputStream MenuMusic = AudioSystem.getAudioInputStream(new File("sfx/GDmenumusic.wav"));
             backgroundMusic1 = AudioSystem.getClip();
             backgroundMusic1.open(MenuMusic);
             backgroundMusic2 = AudioSystem.getClip();
