@@ -398,9 +398,9 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         Point p = e.getPoint();
 
         // Determine current hover state
-        boolean nowHoveringPlay    = playButtonBounds    != null && playButtonBounds.contains(p);
-        boolean nowHoveringIcon    = iconMenuButtonBounds   != null && iconMenuButtonBounds.contains(p);
-        boolean nowHoveringCreator = creatorMenuButtonBounds!= null && creatorMenuButtonBounds.contains(p);
+        boolean nowHoveringPlay    = playButtonBounds    != null && playButtonBounds.contains(p) && gameState == 0;
+        boolean nowHoveringIcon    = iconMenuButtonBounds   != null && iconMenuButtonBounds.contains(p) && gameState == 0;
+        boolean nowHoveringCreator = creatorMenuButtonBounds!= null && creatorMenuButtonBounds.contains(p) && gameState == 0;
 
         // Play SFX on the instant we enter each button
         if (nowHoveringPlay && !hoveringPlay) {
@@ -413,7 +413,6 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             playClipFromStart(buttonHover);
         }
 
-        // **Update the actual hover flags** so updateGame() can animate scales
         hoveringPlay    = nowHoveringPlay;
         hoveringIcon    = nowHoveringIcon;
         hoveringCreator = nowHoveringCreator;
