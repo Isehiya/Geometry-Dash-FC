@@ -165,7 +165,11 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
         blocks.add(new Rectangle2D.Double(1350, 500, 40, 40));
         blocks.add(new Rectangle2D.Double(1500, 500, 40, 40));
-        blocks.add(new Rectangle2D.Double(1500, 450, 40, 40));
+        blocks.add(new Rectangle2D.Double(1500, 460, 40, 40));
+        blocks.add(new Rectangle2D.Double(1650, 500, 40, 40));
+        blocks.add(new Rectangle2D.Double(1650, 460, 40, 40));
+        blocks.add(new Rectangle2D.Double(1650, 420, 40, 40));
+
 
 
     }
@@ -186,6 +190,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         loop.start();
     }
 
+    private boolean noClip = false;
+
     private void updateGame() {
         if (bgImg != null) {
             bgOffsetX = (bgOffsetX - scrollSpeed) % bgImg.getWidth(this);
@@ -205,7 +211,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
         if(gameState == 1) {
             for (int i = 0; i < spikes.size(); i++) {
-                if (player.intersects(hitboxes.get(i))) {
+                if (player.intersects(hitboxes.get(i)) && !noClip) {
                     System.exit(0);
                 }
                 spikes.get(i).x -= scrollSpeed;
@@ -213,7 +219,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             }
             for (int i = 0; i < blocks.size(); i++) {
                 if(player.intersects(blocks.get(i))){
-                    if(player.y > blocks.get(i).y)
+                    if(player.y > blocks.get(i).y  && !noClip)
                         System.exit(0);
                     else{
                         player.y = blocks.get(i).y - 40;
@@ -386,11 +392,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
     public void keyReleased(KeyEvent e) {
         if (e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_UP) {
-            for (Rectangle2D.Double block : blocks) {
-                if (player.intersects(block) || player.y >= 500) {
-                    isJump = false;
-                }
-            }
+            isJump = false;
         }
     }
     public void keyTyped(KeyEvent e) {}
@@ -445,6 +447,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
         if (gameState == 0 && creatorMenuButtonBounds != null && creatorMenuButtonBounds.contains(e.getPoint())) {
             gameState = 1;
+            noClip = true;
             if (backgroundMusic1 != null && backgroundMusic1.isRunning()) {
                 backgroundMusic1.stop();
             }
