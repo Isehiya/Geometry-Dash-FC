@@ -153,6 +153,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         spikes.add(new Rectangle2D.Double(1250, 500, 10, 20));
         spikes.add(new Rectangle2D.Double(1290, 500, 10, 20));
         spikes.add(new Rectangle2D.Double(2200, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(2240, 500, 10, 20));
 
 
         hitboxes.add(new Rectangle2D.Double(355, 510 , 7, 18));
@@ -161,6 +162,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         hitboxes.add(new Rectangle2D.Double(1255, 510 , 7, 18));
         hitboxes.add(new Rectangle2D.Double(1295, 510 , 7, 18));
         hitboxes.add(new Rectangle2D.Double(2205, 510, 7, 18));
+        hitboxes.add(new Rectangle2D.Double(2245, 510, 7, 18));
 
 
         blocks.add(new Rectangle2D.Double(1330, 500, 40, 40));
@@ -169,6 +171,10 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         blocks.add(new Rectangle2D.Double(1730, 500, 40, 40));
         blocks.add(new Rectangle2D.Double(1730, 460, 40, 40));
         blocks.add(new Rectangle2D.Double(1730, 420, 40, 40));
+        for (int i = 2280; i <= 2600; i+=40) {
+            blocks.add(new Rectangle2D.Double(i, 500, 40, 40));
+        }
+
 
 
 
@@ -216,10 +222,10 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 }
                 spikes.get(i).x -= scrollSpeed;
                 hitboxes.get(i).x -= scrollSpeed;
-                if(player.y < 300 && velocityY < 0){
-                    spikes.get(i).y -= velocityY;
-                    hitboxes.get(i).y -= velocityY;
-                }
+//                if(player.y < 300 && velocityY < 0){
+//                    spikes.get(i).y -= velocityY;
+//                    hitboxes.get(i).y -= velocityY;
+//                }
             }
             for (int i = 0; i < blocks.size(); i++) {
                 if(player.intersects(blocks.get(i))){
@@ -237,9 +243,9 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                     }
                 }
                 blocks.get(i).x -= scrollSpeed;
-                if(player.y < 300 && velocityY < 0){
-                    blocks.get(i).y -= velocityY;
-                }
+//                if(player.y < 300 && velocityY < 0){
+//                    blocks.get(i).y -= velocityY;
+//                }
             }
 
             velocityY += GRAVITY;
