@@ -154,6 +154,10 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         spikes.add(new Rectangle2D.Double(1290, 500, 10, 20));
         spikes.add(new Rectangle2D.Double(2200, 500, 10, 20));
         spikes.add(new Rectangle2D.Double(2240, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(2640, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(2680, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(2720, 500, 10, 20));
+
 
 
         hitboxes.add(new Rectangle2D.Double(355, 510 , 7, 18));
@@ -163,6 +167,10 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         hitboxes.add(new Rectangle2D.Double(1295, 510 , 7, 18));
         hitboxes.add(new Rectangle2D.Double(2205, 510, 7, 18));
         hitboxes.add(new Rectangle2D.Double(2245, 510, 7, 18));
+        hitboxes.add(new Rectangle2D.Double(2645, 510, 7, 18));
+        hitboxes.add(new Rectangle2D.Double(2685, 510, 7, 18));
+        hitboxes.add(new Rectangle2D.Double(2725, 510, 7, 18));
+
 
 
         blocks.add(new Rectangle2D.Double(1330, 500, 40, 40));
