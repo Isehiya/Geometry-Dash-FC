@@ -22,6 +22,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     public static int playerSize = 40;
     public static int scrollSpeed = 7;
 
+    public double cameraY = 0;
+
     public static Rectangle2D.Double player;
     public ArrayList<Rectangle2D.Double> blocks = new ArrayList<>();
     public ArrayList<Rectangle2D.Double> spikes = new ArrayList<>();
@@ -157,6 +159,17 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         spikes.add(new Rectangle2D.Double(3390, 500, 10, 20));
         spikes.add(new Rectangle2D.Double(3440, 500, 10, 20));
         spikes.add(new Rectangle2D.Double(3880, 420, 10, 20));
+        for (int i = 5685; i < 5825; i+=40) {
+            spikes.add(new Rectangle2D.Double(i, 280, 10, 20));
+        }
+        for (int i = 6025; i < 6165; i+=40) {
+            spikes.add(new Rectangle2D.Double(i, 280, 10, 20));
+        }
+        for (int i = 6365; i < 6525; i+=40) {
+            spikes.add(new Rectangle2D.Double(i, 240, 10, 20));
+        }
+        spikes.add(new Rectangle2D.Double(6785, 280, 10, 20));
+        spikes.add(new Rectangle2D.Double(6825, 360, 10, 20));
 
 
 
@@ -175,6 +188,18 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         hitboxes.add(new Rectangle2D.Double(3395, 510, 7, 18));
         hitboxes.add(new Rectangle2D.Double(3445, 510, 7, 18));
         hitboxes.add(new Rectangle2D.Double(3885, 430,7 , 18));
+        for (int i = 5690; i < 5830; i+=40) {
+            hitboxes.add(new Rectangle2D.Double(i, 290, 7, 18));
+        }
+        for (int i = 6030; i < 6170; i+=40) {
+            hitboxes.add(new Rectangle2D.Double(i, 290, 7, 18));
+        }
+        for (int i = 6370; i < 6530; i+=40) {
+            hitboxes.add(new Rectangle2D.Double(i, 250, 7, 18));
+        }
+        hitboxes.add(new Rectangle2D.Double(6790, 290, 7, 18));
+        hitboxes.add(new Rectangle2D.Double(6830, 370, 7, 18));
+
 
 
         blocks.add(new Rectangle2D.Double(1330, 500, 40, 40));
@@ -193,19 +218,39 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             blocks.add(new Rectangle2D.Double(i, 500, 40, 40));
             blocks.add(new Rectangle2D.Double(i, 460, 40, 40));
         }
-        blocks.add(new Rectangle2D.Double(4400, 440, 40, 40));
-        blocks.add(new Rectangle2D.Double(4585, 400, 40, 40));
-        blocks.add(new Rectangle2D.Double(4770, 360, 40,40));
-        blocks.add(new Rectangle2D.Double(4955, 320, 40, 40));
-        blocks.add(new Rectangle2D.Double(5140, 280, 40, 40));
+        blocks.add(new Rectangle2D.Double(4400, 440, 40, 20));
+        blocks.add(new Rectangle2D.Double(4585, 400, 40, 20));
+        blocks.add(new Rectangle2D.Double(4770, 360, 40,20));
+        blocks.add(new Rectangle2D.Double(4955, 320, 40, 20));
+        blocks.add(new Rectangle2D.Double(5140, 280, 40, 20));
         blocks.add(new Rectangle2D.Double(5265, 320, 40, 40));
         blocks.add(new Rectangle2D.Double(5305, 320, 40, 40));
 
-        for (int x = 5345; x < 6545; x+=40) {
+        for (int x = 5345; x < 6825; x+=40) {
             for (int y = 320; y <= 500 ; y+=40) {
                 blocks.add(new Rectangle2D.Double(x, y, 40, 40));
             }
         }
+        blocks.add(new Rectangle2D.Double(5725, 260, 40, 20));
+        blocks.add(new Rectangle2D.Double(5765, 260, 40, 20));
+        blocks.add(new Rectangle2D.Double(6065, 260, 40, 20));
+        blocks.add(new Rectangle2D.Double(6105, 260, 40, 20));
+        for (int i = 6265; i < 6625; i++) {
+            blocks.remove(new Rectangle2D.Double(i, 320, 40, 40));
+        }
+
+        for (int i = 6365; i < 6525; i+=40) {
+            blocks.add(new Rectangle2D.Double(i, 280, 40, 20));
+        }
+        for (int x = 6825; x < 7265; x+=40) {
+            for (int y = 400; y <= 500; y+=40) {
+                blocks.add(new Rectangle2D.Double(x, y, 40, 40));
+            }
+        }
+        for (int i = 7265; i < 7420; i+=40) {
+            blocks.add(new Rectangle2D.Double(i, 400, 40, 40));
+        }
+
 
 
 
@@ -217,7 +262,6 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         Thread loop = new Thread(() -> {
             while (running) {
                 updateGame();
-                repaint();
                 try {
                     Thread.sleep(FPS_DELAY);
                 } catch (InterruptedException e) {
@@ -234,6 +278,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         if (bgImg != null) {
             bgOffsetX = (bgOffsetX - scrollSpeed) % bgImg.getWidth(this);
         }
+
 
         if (gameState == 0) {
             if (hoveringPlay && playScale < PLAY_SCALE_MAX) playScale += scaleStep;
@@ -255,7 +300,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             rotation = (rotation + ROT_SPEED) % 360;
             for (int i = 0; i < spikes.size(); i++) {
                 if (player.intersects(hitboxes.get(i)) && !noClip) {
-                    System.exit(0);
+                    gameState = 0;
                 }
                 spikes.get(i).x -= scrollSpeed;
                 hitboxes.get(i).x -= scrollSpeed;
@@ -299,6 +344,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 else rotation = 0;
             }
         }
+        repaint();
     }
 
     @Override
@@ -393,11 +439,11 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 for (int row = 0; row < 3; row++) {
                     int y = startY + row * scaledBh;
                     for (int i = -1; i <= getWidth() / scaledBw + 1; i++) {
-                        g2.drawImage(blockImg, offsetX + i * scaledBw, y, scaledBw, scaledBh, null);
+                        g2.drawImage(blockImg, offsetX + i * scaledBw, (int)(y - cameraY), scaledBw, scaledBh, null);
                     }
                 }
                 for(Rectangle2D.Double r: blocks){
-                    g2.drawImage(blockImg, (int) r.x, (int) r.y, scaledBw, scaledBh, this);
+                    g2.drawImage(blockImg, (int) r.x, (int) r.y, (int) r.width, (int) r.height, this);
                 }
             }
 
@@ -406,7 +452,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 double cx = player.x + playerSize / 2.0;
                 double cy = player.y + playerSize / 2.0;
                 g2.rotate(Math.toRadians(rotation), cx, cy);
-                g2.drawImage(playerImg, (int) player.x, (int) player.y, playerSize, playerSize, null);
+                g2.drawImage(playerImg, (int) player.x, (int) (player.y - cameraY), playerSize, playerSize, null);
                 g2.setTransform(old);
             } else {
                 g2.setColor(Color.BLUE);
