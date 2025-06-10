@@ -9,7 +9,6 @@ public class GDMenuScreen extends JPanel implements MouseListener {
         menu = new JFrame();
         menu.setSize(900, 700);
         menu.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
     }
     public GDMenuScreen(){
 

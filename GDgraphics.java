@@ -28,7 +28,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     public ArrayList<Rectangle2D.Double> hitboxes = new ArrayList<>();
 
     private int velocityY = 0;
-    private boolean isJump = false;
+    private boolean isOnGround = true;
     private double rotation = 0;
 
     public static int gameState = 0;
@@ -70,11 +70,6 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private static final double CREATOR_SCALE_MAX = 1.0;
     private static final double CREATOR_SCALE_MIN = 0.80;
     private double creatorScale = 0.8;
-
-
-
-
-
 
     public GDgraphics() throws UnsupportedAudioFileException, IOException {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -154,9 +149,11 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         spikes.add(new Rectangle2D.Double(1290, 500, 10, 20));
         spikes.add(new Rectangle2D.Double(2200, 500, 10, 20));
         spikes.add(new Rectangle2D.Double(2240, 500, 10, 20));
-        spikes.add(new Rectangle2D.Double(2640, 500, 10, 20));
-        spikes.add(new Rectangle2D.Double(2680, 500, 10, 20));
-        spikes.add(new Rectangle2D.Double(2720, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(2840, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(2885, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(2930, 500, 10, 20));
+        spikes.add(new Rectangle2D.Double(3175, 460, 10, 20));
+        spikes.add(new Rectangle2D.Double(3880, 420, 10, 20));
 
 
 
@@ -167,10 +164,11 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         hitboxes.add(new Rectangle2D.Double(1295, 510 , 7, 18));
         hitboxes.add(new Rectangle2D.Double(2205, 510, 7, 18));
         hitboxes.add(new Rectangle2D.Double(2245, 510, 7, 18));
-        hitboxes.add(new Rectangle2D.Double(2645, 510, 7, 18));
-        hitboxes.add(new Rectangle2D.Double(2685, 510, 7, 18));
-        hitboxes.add(new Rectangle2D.Double(2725, 510, 7, 18));
-
+        hitboxes.add(new Rectangle2D.Double(2845, 510, 7, 18));
+        hitboxes.add(new Rectangle2D.Double(2890, 510, 7, 18));
+        hitboxes.add(new Rectangle2D.Double(2935, 510, 7, 18));
+        hitboxes.add(new Rectangle2D.Double(3180, 470, 7, 18));
+        hitboxes.add(new Rectangle2D.Double(3885, 430,7 , 18));
 
 
         blocks.add(new Rectangle2D.Double(1330, 500, 40, 40));
@@ -179,13 +177,25 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         blocks.add(new Rectangle2D.Double(1730, 500, 40, 40));
         blocks.add(new Rectangle2D.Double(1730, 460, 40, 40));
         blocks.add(new Rectangle2D.Double(1730, 420, 40, 40));
-        for (int i = 2280; i <= 2600; i+=40) {
+        for (int i = 2480; i <= 2800; i+=40) {
             blocks.add(new Rectangle2D.Double(i, 500, 40, 40));
         }
+        for (int i = 2980; i <= 3300; i+=40) {
+            blocks.add(new Rectangle2D.Double(i, 500, 40, 40));
+        }
+        for (int i = 3480; i <= 4200; i+=40) {
+            blocks.add(new Rectangle2D.Double(i, 500, 40, 40));
+            blocks.add(new Rectangle2D.Double(i, 460, 40, 40));
+        }
+        blocks.add(new Rectangle2D.Double(4400, 440, 40, 40));
+        blocks.add(new Rectangle2D.Double(4585, 400, 40, 40));
+        blocks.add(new Rectangle2D.Double(4770, 360, 40,40));
+        blocks.add(new Rectangle2D.Double(4955, 320, 40, 40));
+        blocks.add(new Rectangle2D.Double(5140, 280, 40, 40));
+        blocks.add(new Rectangle2D.Double(5325, 240, 40, 40));
 
 
-
-
+        startGameLoop();
     }
 
     public void startGameLoop() {
@@ -224,6 +234,11 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         }
 
         if(gameState == 1) {
+            isOnGround = false;
+            velocityY += GRAVITY;
+            player.y += velocityY;
+
+            rotation = (rotation + ROT_SPEED) % 360;
             for (int i = 0; i < spikes.size(); i++) {
                 if (player.intersects(hitboxes.get(i)) && !noClip) {
                     System.exit(0);
@@ -236,13 +251,19 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 //                }
             }
             for (int i = 0; i < blocks.size(); i++) {
-                if(player.intersects(blocks.get(i))){
-                    if(player.y > blocks.get(i).y  && !noClip)
-                        System.exit(0);
-                    else{
-                        player.y = blocks.get(i).y - 40;
+                blocks.get(i).x -= scrollSpeed;
+//                if(player.y < 300 && velocityY < 0){
+//                    blocks.get(i).y -= velocityY;
+//                }
+            }
+            for (Rectangle2D.Double block : blocks) {
+                // Check if player is overlapping block
+                if (player.intersects(block)) {
+                    // Player’s bottom is below block’s top – adjust
+                    if (velocityY > 0 && player.y + player.height >= block.y) {
+                        isOnGround = true;
+                        player.y = block.y - player.height; // snap to block top
                         velocityY = 0;
-                        isJump = false;
                         if (rotation <= 45) rotation = 0;
                         else if (rotation <= 135) rotation = 90;
                         else if (rotation <= 225) rotation = 180;
@@ -250,23 +271,13 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                         else rotation = 0;
                     }
                 }
-                blocks.get(i).x -= scrollSpeed;
-//                if(player.y < 300 && velocityY < 0){
-//                    blocks.get(i).y -= velocityY;
-//                }
             }
 
-            velocityY += GRAVITY;
-            player.y += velocityY;
-
-            if (isJump) {
-                rotation = (rotation + ROT_SPEED) % 360;
-            }
 
             if (player.y > GROUND_Y) {
                 player.y = GROUND_Y;
                 velocityY = 0;
-                isJump = false;
+                isOnGround = true;
                 if (rotation <= 45) rotation = 0;
                 else if (rotation <= 135) rotation = 90;
                 else if (rotation <= 225) rotation = 180;
@@ -405,16 +416,13 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
-        if ((code == KeyEvent.VK_SPACE || code == KeyEvent.VK_UP) && !isJump) {
+        if ((code == KeyEvent.VK_SPACE || code == KeyEvent.VK_UP) && isOnGround) {
             velocityY = JUMP_VELOCITY;
-            isJump = true;
+            isOnGround = false;
         }
     }
 
     public void keyReleased(KeyEvent e) {
-        if (e.getKeyCode() == KeyEvent.VK_SPACE || e.getKeyCode() == KeyEvent.VK_UP) {
-            isJump = false;
-        }
     }
     public void keyTyped(KeyEvent e) {}
     public void mouseMoved(MouseEvent e) {

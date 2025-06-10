@@ -11,6 +11,5 @@ public class GDmain {
         GDgraphics panel = new GDgraphics();
         frame.add(panel);
         frame.setVisible(true);
-        panel.startGameLoop();
     }
 }
