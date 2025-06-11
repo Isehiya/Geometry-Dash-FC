@@ -41,6 +41,9 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private Image playerImg, blockImg, bgImg, spike;
     private Image halfSpeedPortal, speedPortal1, speedPortal2, speedPortal3, speedPortal4;
     private Image logo, playButton, iconMenuButton, creatorMenuButton;
+    private Image cubePortal, shipPortal;
+
+    private static Rectangle2D.Double shipPort = new Rectangle2D.Double(11000, 500, 40, 120);
 
     ArrayList<String> icons = new ArrayList<>();
 
@@ -112,8 +115,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         tracker.addImage(iconMenuButton, 11);
         creatorMenuButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDcreatormenubutton2.png");
         tracker.addImage(creatorMenuButton, 12);
-
-
+        shipPortal = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDshipportal.gif");
+        tracker.addImage(shipPortal, 13);
 
 
         try {
@@ -174,7 +177,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         spikes.add(new Rectangle2D.Double(7940, 400, 10, 20));
         spikes.add(new Rectangle2D.Double(9290, 200, 10, 20));
 
-        for (int i = 5435; i < 9300; i+=40) {
+        for (int i = 5435; i < 9260; i+=40) {
             spikes.add(new Rectangle2D.Double(i, 500, 10, 20));
         }
 
@@ -210,7 +213,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         hitboxes.add(new Rectangle2D.Double(7945, 410, 7, 18));
         hitboxes.add(new Rectangle2D.Double(9295, 210, 7, 18));
 
-        for (int i = 5440; i < 9305; i+=40) {
+        for (int i = 5440; i < 9265; i+=40) {
             hitboxes.add(new Rectangle2D.Double(i, 510, 7, 18));
         }
 
@@ -361,6 +364,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 }
             }
 
+            shipPort.x -= scrollSpeed;
+
 
             if (player.y > GROUND_Y) {
                 player.y = GROUND_Y;
@@ -474,6 +479,10 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 for(Rectangle2D.Double r: blocks){
                     g2.drawImage(blockImg, (int) r.x, (int) r.y, (int) r.width, (int) r.height, this);
                 }
+            }
+
+            if (shipPortal != null){
+                g2.drawImage(shipPortal, (int) shipPort.x, (int) shipPort.y, (int) shipPort.width, (int) shipPort.height, this);
             }
 
             if (playerImg != null) {
