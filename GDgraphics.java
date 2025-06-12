@@ -41,9 +41,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private Image playerImg, blockImg, bgImg, spike;
     private Image halfSpeedPortal, speedPortal1, speedPortal2, speedPortal3, speedPortal4;
     private Image logo, playButton, iconMenuButton, creatorMenuButton;
-    private Image cubePortal, shipPortal;
-
-    private static Rectangle2D.Double shipPort = new Rectangle2D.Double(11000, 500, 40, 120);
+    private Image shipPortal;
+    private Image levelComplete;
 
     ArrayList<String> icons = new ArrayList<>();
 
@@ -75,6 +74,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private static final double CREATOR_SCALE_MAX = 1.0;
     private static final double CREATOR_SCALE_MIN = 0.80;
     private double creatorScale = 0.8;
+
+    private Rectangle2D.Double shipPort = new Rectangle2D.Double(11000, 500, 40, 120);
 
     public GDgraphics() throws UnsupportedAudioFileException, IOException {
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
@@ -115,14 +116,16 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         tracker.addImage(iconMenuButton, 11);
         creatorMenuButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDcreatormenubutton2.png");
         tracker.addImage(creatorMenuButton, 12);
-        shipPortal = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDshipportal.gif");
+        shipPortal = Toolkit.getDefaultToolkit().getImage("GDshipportal.gif");
         tracker.addImage(shipPortal, 13);
+        levelComplete = Toolkit.getDefaultToolkit().getImage("GDlevelcomplete.png");
+        tracker.addImage(levelComplete, 14);
 
 
         try {
             tracker.waitForAll();
         } catch (InterruptedException e) {
-            throw new RuntimeException(e);
+            System.out.println("Wow");
         }
 
         player = new Rectangle2D.Double(50, GROUND_Y, playerSize, playerSize);
@@ -328,7 +331,6 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             isOnGround = false;
             velocityY += GRAVITY;
             player.y += velocityY;
-
             rotation = (rotation + ROT_SPEED) % 360;
             for (int i = 0; i < spikes.size(); i++) {
                 if (player.intersects(hitboxes.get(i)) && !noClip) {
@@ -341,6 +343,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 //                    hitboxes.get(i).y -= velocityY;
 //                }
             }
+            shipPort.x -= scrollSpeed;
             for (int i = 0; i < blocks.size(); i++) {
                 blocks.get(i).x -= scrollSpeed;
 //                if(player.y < 300 && velocityY < 0){
@@ -363,10 +366,6 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                     }
                 }
             }
-
-            shipPort.x -= scrollSpeed;
-
-
             if (player.y > GROUND_Y) {
                 player.y = GROUND_Y;
                 velocityY = 0;
@@ -377,7 +376,13 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 else if (rotation <= 315) rotation = 270;
                 else rotation = 0;
             }
+            if (player.intersects(shipPort)) {
+                gameState = 2;
+            }
+            if (gameState == 2) {
+            }
         }
+
         repaint();
     }
 
@@ -462,6 +467,15 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 g2.drawImage(spike, (int) spikeRect.x, (int) spikeRect.y, spikeWidth, spikeHeight, this);
             }
 
+            if(shipPortal != null){
+                g2.drawImage(shipPortal, (int) shipPort.x, (int) shipPort.y, 40, 120, this);
+                g2.setColor(Color.MAGENTA);
+                g2.fillRect((int) shipPort.x, 120, 40, 120);
+            }
+            else{
+                System.out.println("Nothing");
+            }
+
             if (blockImg != null) {
                 int nativeBw = blockImg.getWidth(this);
                 int nativeBh = blockImg.getHeight(this);
@@ -481,10 +495,6 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 }
             }
 
-            if (shipPortal != null){
-                g2.drawImage(shipPortal, (int) shipPort.x, (int) shipPort.y, (int) shipPort.width, (int) shipPort.height, this);
-            }
-
             if (playerImg != null) {
                 AffineTransform old = g2.getTransform();
                 double cx = player.x + playerSize / 2.0;
@@ -496,6 +506,11 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 g2.setColor(Color.BLUE);
                 g2.fill(player);
             }
+        }
+        else if (gameState == 2){
+            g2.drawImage(levelComplete, 0, 0, 900, 700, this);
+            g2.setFont(new Font("Arial", Font.BOLD, 30));
+            g2.drawString("Click anywhere to continue", 450, 550);
         }
 
     }
@@ -584,7 +599,20 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             }
         }
     }
-    public void mousePressed(MouseEvent e) {}
+    public void mousePressed(MouseEvent e) {
+        if (gameState == 2){
+            gameState = 0;
+            player.x = 0;
+            player.y = 500;
+            try {
+                new GDgraphics();
+            } catch (UnsupportedAudioFileException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+    }
     public void mouseReleased(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
