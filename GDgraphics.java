@@ -35,7 +35,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
     public static int gameState = 0;
 
-    Clip backgroundMusic1, backgroundMusic2;
+    Clip backgroundMusic1, backgroundMusic2, endMusic;
     Clip buttonHover;
 
     private Image playerImg, blockImg, bgImg, spike;
@@ -134,12 +134,16 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             AudioInputStream StereoMadness = AudioSystem.getAudioInputStream(new File("sfx/StereoMadness.wav"));
             AudioInputStream MenuMusic = AudioSystem.getAudioInputStream(new File("sfx/GDmenumusic.wav"));
             AudioInputStream HoveringButton = AudioSystem.getAudioInputStream(new File("sfx/GDbuttonhover.wav"));
+            AudioInputStream EndMusic = AudioSystem.getAudioInputStream(new File("Igallta.wav"));
             backgroundMusic1 = AudioSystem.getClip();
             backgroundMusic1.open(MenuMusic);
             backgroundMusic2 = AudioSystem.getClip();
             backgroundMusic2.open(StereoMadness);
             buttonHover = AudioSystem.getClip();
             buttonHover.open(HoveringButton);
+            endMusic = AudioSystem.getClip();
+            endMusic.open(EndMusic);
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -328,6 +332,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         }
 
         if(gameState == 1) {
+            scrollSpeed = 7;
             isOnGround = false;
             velocityY += GRAVITY;
             player.y += velocityY;
@@ -380,6 +385,14 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 gameState = 2;
             }
             if (gameState == 2) {
+                player.x = 0;
+                player.y = 500;
+                scrollSpeed = 0;
+                backgroundMusic2.stop();
+                if(endMusic != null){
+                    endMusic.setFramePosition(0);
+                    endMusic.loop(Clip.LOOP_CONTINUOUSLY);
+                }
             }
         }
 
@@ -527,6 +540,33 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         c.start();
     }
 
+    public void resetGame() {
+        // Reset player position and state
+        player.x = 100;
+        player.y = 300;
+        isOnGround = false;
+
+        // Reset camera/scroll variables
+        scrollSpeed = 7;
+        cameraY = 0;
+
+        // Reset the ship portal position
+        shipPort.x += 11000;
+        shipPort.y = 500;
+
+        // Reset blocks/spikes if needed (example)
+        for (Rectangle2D.Double spike : spikes) {
+            spike.x += 11000; // or set to original position
+        }
+        for (Rectangle2D.Double block : blocks) {
+            block.x += 11000;
+        }
+        backgroundMusic1.setFramePosition(0);
+        backgroundMusic1.loop(Clip.LOOP_CONTINUOUSLY);
+        // Repaint the screen and go back to menu
+        repaint();
+    }
+
     public void keyPressed(KeyEvent e) {
         int code = e.getKeyCode();
         if ((code == KeyEvent.VK_SPACE || code == KeyEvent.VK_UP) && isOnGround) {
@@ -598,21 +638,13 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 backgroundMusic2.loop(Clip.LOOP_CONTINUOUSLY);
             }
         }
-    }
-    public void mousePressed(MouseEvent e) {
         if (gameState == 2){
+            resetGame();
             gameState = 0;
-            player.x = 0;
-            player.y = 500;
-            try {
-                new GDgraphics();
-            } catch (UnsupportedAudioFileException ex) {
-                throw new RuntimeException(ex);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
+            endMusic.stop();
         }
     }
+    public void mousePressed(MouseEvent e) {}
     public void mouseReleased(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
