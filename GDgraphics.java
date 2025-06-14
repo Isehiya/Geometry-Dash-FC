@@ -570,12 +570,12 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 }
             }
 
-            if(greenButton != null){
+            if(greenButton != null){ // Instructions button
                 g2.drawImage(greenButton, 350, 600, 60, 60, this);
                 instructionsBounds = new Rectangle( 350, 600, 60, 60);
             }
 
-            if (blueButton != null){
+            if (blueButton != null){ // Credits button (originally blue but changed to green as well)
                 g2.drawImage(blueButton, 450, 600, 60, 60, this);
                 creditsBounds = new Rectangle( 450, 600, 60, 60);
             }
