@@ -66,6 +66,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private Image shipPortal;
     private Image levelComplete, instructions, creditsImage;
     private Image iconselector;
+    private Image iconmenu;
 
     ArrayList<String> icons = new ArrayList<>();
 
@@ -160,6 +161,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         tracker.addImage(greenButton, 18);
         blueButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDcreditsbutton.png");
         tracker.addImage(blueButton, 19);
+        iconmenu = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDiconmenu.png");
 
 
         try {
