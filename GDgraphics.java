@@ -134,7 +134,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             AudioInputStream StereoMadness = AudioSystem.getAudioInputStream(new File("sfx/StereoMadness.wav"));
             AudioInputStream MenuMusic = AudioSystem.getAudioInputStream(new File("sfx/GDmenumusic.wav"));
             AudioInputStream HoveringButton = AudioSystem.getAudioInputStream(new File("sfx/GDbuttonhover.wav"));
-            AudioInputStream EndMusic = AudioSystem.getAudioInputStream(new File("Igallta.wav"));
+            AudioInputStream EndMusic = AudioSystem.getAudioInputStream(new File("sfx/Igallta.wav"));
             backgroundMusic1 = AudioSystem.getClip();
             backgroundMusic1.open(MenuMusic);
             backgroundMusic2 = AudioSystem.getClip();
