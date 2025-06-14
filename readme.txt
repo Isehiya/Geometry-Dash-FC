@@ -49,3 +49,5 @@ Bugs:
 Additional info:
 
 - File may be very large.
+
+- Run the game on GDmain.java.
