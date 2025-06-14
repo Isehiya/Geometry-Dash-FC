@@ -66,6 +66,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private Image shipPortal;
     private Image levelComplete, instructions, creditsImage;
     private Image iconselector;
+    private Image iconmenu;
 
     ArrayList<String> icons = new ArrayList<>();
 
@@ -151,14 +152,15 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         tracker.addImage(levelComplete, 14);
         iconselector = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDiconmenu.png");
         tracker.addImage(iconselector, 15);
-        instructions = Toolkit.getDefaultToolkit().getImage("GDinstructions.png");
+        instructions = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDinstructions.png");
         tracker.addImage(instructions, 16);
-        creditsImage = Toolkit.getDefaultToolkit().getImage("GDcredits.png");
+        creditsImage = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDcredits.png");
         tracker.addImage(creditsImage, 17);
         greenButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDinfobutton.png");
         tracker.addImage(greenButton, 18);
         blueButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDcreditsbutton.png");
         tracker.addImage(blueButton, 19);
+        iconmenu = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDiconmenu.png");
 
 
         try {
@@ -172,13 +174,13 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
         try { // Loading music and SFX
             AudioInputStream StereoMadness = AudioSystem.getAudioInputStream(new File("sfx/StereoMadness.wav"));
-            AudioInputStream MenuMusic = AudioSystem.getAudioInputStream(new File("Rrhar'il.wav"));
+            AudioInputStream MenuMusic = AudioSystem.getAudioInputStream(new File("sfx/Rrhar'il.wav"));
             AudioInputStream HoveringButton = AudioSystem.getAudioInputStream(new File("sfx/GDbuttonhover.wav"));
             AudioInputStream EndMusic = AudioSystem.getAudioInputStream(new File("sfx/Igallta.wav"));
-            AudioInputStream Dead = AudioSystem.getAudioInputStream(new File("dead.wav"));
-            AudioInputStream Icon = AudioSystem.getAudioInputStream(new File("Isolation.wav"));
-            AudioInputStream Credits = AudioSystem.getAudioInputStream(new File("Solar Wind.wav"));
-            AudioInputStream Instructions = AudioSystem.getAudioInputStream(new File("Quaoar.wav"));
+            AudioInputStream Dead = AudioSystem.getAudioInputStream(new File("sfx/dead.wav"));
+            AudioInputStream Icon = AudioSystem.getAudioInputStream(new File("sfx/Isolation.wav"));
+            AudioInputStream Credits = AudioSystem.getAudioInputStream(new File("sfx/Solar Wind.wav"));
+            AudioInputStream Instructions = AudioSystem.getAudioInputStream(new File("sfx/Quaoar.wav"));
             backgroundMusic1 = AudioSystem.getClip();
             backgroundMusic1.open(MenuMusic);
             backgroundMusic2 = AudioSystem.getClip();
