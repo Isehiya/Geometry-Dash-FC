@@ -155,9 +155,9 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         tracker.addImage(instructions, 16);
         creditsImage = Toolkit.getDefaultToolkit().getImage("GDcredits.png");
         tracker.addImage(creditsImage, 17);
-        greenButton = Toolkit.getDefaultToolkit().getImage("GDgreenbutton.png");
+        greenButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDinfobutton.png");
         tracker.addImage(greenButton, 18);
-        blueButton = Toolkit.getDefaultToolkit().getImage("GDbluebutton.png");
+        blueButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDcreditsbutton.png");
         tracker.addImage(blueButton, 19);
 
 
@@ -574,7 +574,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
             if (blueButton != null){
                 g2.drawImage(blueButton, 800, 800, greenButton.getWidth(this), greenButton.getHeight(this), this);
-                creditsBounds = new Rectangle( 200, 100, blueButton.getWidth(this), blueButton.getHeight(this));
+                creditsBounds = new Rectangle( 200, 500, blueButton.getWidth(this), blueButton.getHeight(this));
             }
 
 
@@ -830,6 +830,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             credits.stop();
             instructionsMusic.stop();
             icon.stop();
+            backgroundMusic1.setFramePosition(0);
+            backgroundMusic1.start();
         }
         if(gameState == -2){ // Resumes game
             gameState = 1;
