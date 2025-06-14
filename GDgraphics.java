@@ -60,7 +60,9 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     // Game images
     private Image playerImg, blockImg, bgImg, spike;
     private Image halfSpeedPortal, speedPortal1, speedPortal2, speedPortal3, speedPortal4;
-    private Image logo, playButton, iconMenuButton, creatorMenuButton;
+
+    // Green button = instructions; blue button = credits
+    private Image logo, playButton, iconMenuButton, creatorMenuButton, greenButton, blueButton;
     private Image shipPortal;
     private Image levelComplete, instructions, creditsImage;
     private Image iconselector;
@@ -77,6 +79,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private Rectangle playButtonBounds;
     private Rectangle iconMenuButtonBounds;
     private Rectangle creatorMenuButtonBounds;
+    private Rectangle instructionsBounds;
+    private Rectangle creditsBounds;
     private boolean hoveringPlay = false;
     private double playScale = 1.0;
     private boolean hoveringIcon = false;
@@ -100,6 +104,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private Rectangle2D.Double endPort = new Rectangle2D.Double(11000, 500, 40, 120);
 
     public GDgraphics() throws UnsupportedAudioFileException, IOException {
+
         // Setting game dimensions and initializing keyboard and mouse
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(Color.WHITE);
@@ -150,6 +155,10 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         tracker.addImage(instructions, 16);
         creditsImage = Toolkit.getDefaultToolkit().getImage("GDcredits.png");
         tracker.addImage(creditsImage, 17);
+        greenButton = Toolkit.getDefaultToolkit().getImage("GDgreenbutton.png");
+        tracker.addImage(greenButton, 18);
+        blueButton = Toolkit.getDefaultToolkit().getImage("GDbluebutton.png");
+        tracker.addImage(blueButton, 19);
 
 
         try {
@@ -558,6 +567,16 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 }
             }
 
+            if(greenButton != null){
+                g2.drawImage(greenButton, 100, 800, greenButton.getWidth(this), greenButton.getHeight(this), this);
+                instructionsBounds = new Rectangle( 100, 100, greenButton.getWidth(this), greenButton.getHeight(this));
+            }
+
+            if (blueButton != null){
+                g2.drawImage(blueButton, 800, 800, greenButton.getWidth(this), greenButton.getHeight(this), this);
+                creditsBounds = new Rectangle( 200, 100, blueButton.getWidth(this), blueButton.getHeight(this));
+            }
+
 
         }
         else if (gameState == 1 || gameState == -2) {
@@ -777,6 +796,28 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             if (backgroundMusic2 != null && !backgroundMusic2.isRunning()) {
                 backgroundMusic2.setFramePosition(0);
                 backgroundMusic2.loop(Clip.LOOP_CONTINUOUSLY);
+            }
+        }
+
+        if (gameState == 0 && instructionsBounds != null && instructionsBounds.contains(e.getPoint())){
+            gameState = -1;
+            if (backgroundMusic1 != null && backgroundMusic1.isRunning()) {
+                backgroundMusic1.stop();
+            }
+            if(!instructionsMusic.isRunning() && instructionsMusic != null){
+                instructionsMusic.setFramePosition(0);
+                instructionsMusic.start();
+            }
+        }
+
+        if (gameState == 0 && creditsBounds != null && creditsBounds.contains(e.getPoint())){
+            gameState = 4;
+            if (backgroundMusic1 != null && backgroundMusic1.isRunning()) {
+                backgroundMusic1.stop();
+            }
+            if (!credits.isRunning() && credits != null){
+                credits.setFramePosition(0);
+                credits.loop(Clip.LOOP_CONTINUOUSLY);
             }
         }
         if (gameState == 2){ // Resets game to the menu screen
