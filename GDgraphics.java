@@ -5,8 +5,9 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 import javax.sound.sampled.*;
+import java.sql.Time;
 import java.util.*;
-
+import java.util.concurrent.TimeUnit;
 
 
 public class GDgraphics extends JPanel implements KeyListener, MouseListener, MouseMotionListener {
@@ -18,6 +19,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     public static final int JUMP_VELOCITY = -15;
     public static final int GROUND_Y = 500;
     private static final double ROT_SPEED = 10.0;
+    public int playerX = 0;
 
     public static int playerSize = 40;
     public static int scrollSpeed = 7;
@@ -36,7 +38,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     public static int gameState = 0;
 
     Clip backgroundMusic1, backgroundMusic2, endMusic;
-    Clip buttonHover;
+    Clip buttonHover, dead;
 
     private Image playerImg, blockImg, bgImg, spike;
     private Image halfSpeedPortal, speedPortal1, speedPortal2, speedPortal3, speedPortal4;
@@ -140,6 +142,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             AudioInputStream MenuMusic = AudioSystem.getAudioInputStream(new File("Rrhar'il.wav"));
             AudioInputStream HoveringButton = AudioSystem.getAudioInputStream(new File("sfx/GDbuttonhover.wav"));
             AudioInputStream EndMusic = AudioSystem.getAudioInputStream(new File("sfx/Igallta.wav"));
+            AudioInputStream Dead = AudioSystem.getAudioInputStream(new File("dead.wav"));
             backgroundMusic1 = AudioSystem.getClip();
             backgroundMusic1.open(MenuMusic);
             backgroundMusic2 = AudioSystem.getClip();
@@ -148,6 +151,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             buttonHover.open(HoveringButton);
             endMusic = AudioSystem.getClip();
             endMusic.open(EndMusic);
+            dead = AudioSystem.getClip();
+            dead.open(Dead);
 
 
         } catch (Exception e) {
@@ -305,7 +310,11 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         running = true;
         Thread loop = new Thread(() -> {
             while (running) {
-                updateGame();
+                try {
+                    updateGame();
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
                 try {
                     Thread.sleep(FPS_DELAY);
                 } catch (InterruptedException e) {
@@ -320,7 +329,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
     private int frames = 0;
 
-    private void updateGame() {
+    private void updateGame() throws InterruptedException {
         if (bgImg != null) {
             bgOffsetX = (bgOffsetX - scrollSpeed) % bgImg.getWidth(this);
         }
@@ -341,33 +350,31 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             if (gameState == -2) scrollSpeed = 0;
             else {
                 scrollSpeed = 7;
+                playerX += scrollSpeed;
                 isOnGround = false;
                 velocityY += GRAVITY;
                 player.y += velocityY;
                 rotation = (rotation + ROT_SPEED) % 360;
                 for (int i = 0; i < spikes.size(); i++) {
                     if (player.intersects(hitboxes.get(i)) && !noClip) {
-                        System.exit(8);
+                        backgroundMusic2.stop();
+                        dead.setFramePosition(0);
+                        dead.start();
+                        TimeUnit.SECONDS.sleep(1);
+                        resetGame();
                     }
                     spikes.get(i).x -= scrollSpeed;
                     hitboxes.get(i).x -= scrollSpeed;
-//                if(player.y < 300 && velocityY < 0){
-//                    spikes.get(i).y -= velocityY;
-//                    hitboxes.get(i).y -= velocityY;
-//                }
                 }
                 shipPort.x -= scrollSpeed;
                 for (int i = 0; i < blocks.size(); i++) {
                     blocks.get(i).x -= scrollSpeed;
-//                if(player.y < 300 && velocityY < 0){
-//                    blocks.get(i).y -= velocityY;
-//                }
                 }
                 for (Rectangle2D.Double block : blocks) {
                     // Check if player is overlapping block
                     if (player.intersects(block)) {
                         // Player’s bottom is below block’s top – adjust
-                        if (velocityY > 0 && player.y + player.height >= block.y) {
+                        if (velocityY > 0 && player.y <= block.y) {
                             isOnGround = true;
                             player.y = block.y - player.height; // snap to block top
                             velocityY = 0;
@@ -376,6 +383,13 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                             else if (rotation <= 225) rotation = 180;
                             else if (rotation <= 315) rotation = 270;
                             else rotation = 0;
+                        }
+                        else{
+                            backgroundMusic2.stop();
+                            dead.setFramePosition(0);
+                            dead.start();
+                            TimeUnit.SECONDS.sleep(1);
+                            resetGame();
                         }
                     }
                 }
@@ -556,9 +570,10 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     }
 
     public void resetGame() {
+        backgroundMusic2.stop();
         // Reset player position and state
         player.x = 100;
-        player.y = 300;
+        player.y = 500;
         isOnGround = false;
 
         // Reset camera/scroll variables
@@ -566,19 +581,30 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         cameraY = 0;
 
         // Reset the ship portal position
-        shipPort.x += 11000;
+        shipPort.x += playerX;
         shipPort.y = 500;
 
         // Reset blocks/spikes if needed (example)
         for (Rectangle2D.Double spike : spikes) {
-            spike.x += 11000; // or set to original position
+            spike.x += playerX; // or set to original position
         }
         for (Rectangle2D.Double block : blocks) {
-            block.x += 11000;
+            block.x += playerX;
         }
-        backgroundMusic1.setFramePosition(0);
-        backgroundMusic1.loop(Clip.LOOP_CONTINUOUSLY);
+        for (Rectangle2D.Double hitbox: hitboxes){
+            hitbox.x += playerX;
+        }
+        if (gameState == 2) {
+            backgroundMusic1.setFramePosition(0);
+            backgroundMusic1.loop(Clip.LOOP_CONTINUOUSLY);
+        }
+        else if (gameState == 1){
+            backgroundMusic2.stop();
+            backgroundMusic2.setFramePosition(0);
+            backgroundMusic2.start();
+        }
         // Repaint the screen and go back to menu
+        playerX = 0;
         repaint();
     }
 
