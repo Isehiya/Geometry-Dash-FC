@@ -39,12 +39,13 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
     Clip backgroundMusic1, backgroundMusic2, endMusic;
     Clip buttonHover, dead;
+    Clip icon, credits, instructionsMusic;
 
     private Image playerImg, blockImg, bgImg, spike;
     private Image halfSpeedPortal, speedPortal1, speedPortal2, speedPortal3, speedPortal4;
     private Image logo, playButton, iconMenuButton, creatorMenuButton;
     private Image shipPortal;
-    private Image levelComplete, instructions;
+    private Image levelComplete, instructions, creditsImage;
     private Image iconselector;
 
     ArrayList<String> icons = new ArrayList<>();
@@ -127,6 +128,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         tracker.addImage(iconselector, 15);
         instructions = Toolkit.getDefaultToolkit().getImage("GDinstructions.png");
         tracker.addImage(instructions, 16);
+        creditsImage = Toolkit.getDefaultToolkit().getImage("GDcredits.png");
+        tracker.addImage(creditsImage, 17);
 
 
         try {
@@ -143,6 +146,9 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             AudioInputStream HoveringButton = AudioSystem.getAudioInputStream(new File("sfx/GDbuttonhover.wav"));
             AudioInputStream EndMusic = AudioSystem.getAudioInputStream(new File("sfx/Igallta.wav"));
             AudioInputStream Dead = AudioSystem.getAudioInputStream(new File("dead.wav"));
+            AudioInputStream Icon = AudioSystem.getAudioInputStream(new File("Isolation.wav"));
+            AudioInputStream Credits = AudioSystem.getAudioInputStream(new File("Solar Wind.wav"));
+            AudioInputStream Instructions = AudioSystem.getAudioInputStream(new File("Quaoar.wav"));
             backgroundMusic1 = AudioSystem.getClip();
             backgroundMusic1.open(MenuMusic);
             backgroundMusic2 = AudioSystem.getClip();
@@ -153,6 +159,12 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             endMusic.open(EndMusic);
             dead = AudioSystem.getClip();
             dead.open(Dead);
+            icon = AudioSystem.getClip();
+            icon.open(Icon);
+            credits = AudioSystem.getClip();
+            credits.open(Credits);
+            instructionsMusic = AudioSystem.getClip();
+            instructionsMusic.open(Instructions);
 
 
         } catch (Exception e) {
@@ -418,6 +430,20 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 }
             }
         }
+        else if (gameState == -1){
+            if(!instructionsMusic.isRunning()){
+                backgroundMusic1.stop();
+                instructionsMusic.setFramePosition(0);
+                instructionsMusic.loop(Clip.LOOP_CONTINUOUSLY);
+            }
+        }
+        else if (gameState == 4){
+            if(!credits.isRunning()){
+                backgroundMusic1.stop();
+                credits.setFramePosition(0);
+                credits.loop(Clip.LOOP_CONTINUOUSLY);
+            }
+        }
 
         repaint();
     }
@@ -487,10 +513,6 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
         }
         else if (gameState == 1 || gameState == -2) {
-            if (gameState == -2) {
-                g2.setFont(new Font("Arial", Font.BOLD, 30));
-                g2.drawString("Paused - click to continue", 0, 0);
-            }
                 //moves the background backwards
                 if (bgImg != null) {
                     int bwBg = bgImg.getWidth(this);
@@ -545,7 +567,10 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                     g2.setColor(Color.BLUE);
                     g2.fill(player);
                 }
-
+        }
+        if (gameState == -2) {
+            g2.setFont(new Font("Arial", Font.BOLD, 30));
+            g2.drawString("Paused - click to continue", 0, 0);
         }
         else if (gameState == 2){
             g2.drawImage(levelComplete, 0, 0, 900, 700, this);
@@ -554,6 +579,9 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         }
         else if (gameState == -1){
             g2.drawImage(instructions, 0, 0, 900, 700, this);
+        }
+        else if (gameState == 4){
+            g2.drawImage(creditsImage, 0, 0, 900, 700, this);
         }
     }
 
@@ -615,10 +643,16 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             isOnGround = false;
         }
         else if (code == KeyEvent.VK_ESCAPE){
-            gameState = -2;
-            if (backgroundMusic2.isRunning()) {
-                frames = backgroundMusic2.getFramePosition();
-                backgroundMusic2.stop();
+            if (gameState != -2) {
+                gameState = -2;
+                if (backgroundMusic2.isRunning()) {
+                    frames = backgroundMusic2.getFramePosition();
+                    backgroundMusic2.stop();
+                }
+            }
+            else{
+                gameState = 0;
+                resetGame();
             }
         }
     }
@@ -691,7 +725,11 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             gameState = 0;
             endMusic.stop();
         }
-        if(gameState == -1) gameState = 0;
+        if(gameState == -1 || gameState == 3|| gameState == 4){
+            gameState = 0;
+            credits.stop();
+            instructionsMusic.stop();
+        }
         if(gameState == -2){
             gameState = 1;
             backgroundMusic2.setFramePosition(frames);

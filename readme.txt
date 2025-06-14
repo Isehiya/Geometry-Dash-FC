@@ -16,7 +16,7 @@ How to play:
 
 - Reach the pink rectangle to win.
 
-- Press Esc to pause game; click anywhere to continue.
+- Press Esc to pause game; click anywhere to continue. Press Esc again to return to menu.
 
 
 Missing functionalities:
