@@ -43,6 +43,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private Image logo, playButton, iconMenuButton, creatorMenuButton;
     private Image shipPortal;
     private Image levelComplete;
+    private Image iconselector;
 
     ArrayList<String> icons = new ArrayList<>();
 
@@ -116,10 +117,12 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         tracker.addImage(iconMenuButton, 11);
         creatorMenuButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDcreatormenubutton2.png");
         tracker.addImage(creatorMenuButton, 12);
-        shipPortal = Toolkit.getDefaultToolkit().getImage("GDshipportal.gif");
+        shipPortal = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDshipportal.gif");
         tracker.addImage(shipPortal, 13);
-        levelComplete = Toolkit.getDefaultToolkit().getImage("GDlevelcomplete.png");
+        levelComplete = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDlevelcomplete.png");
         tracker.addImage(levelComplete, 14);
+        iconselector = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDiconmenu.png");
+        tracker.addImage(iconselector, 15);
 
 
         try {
