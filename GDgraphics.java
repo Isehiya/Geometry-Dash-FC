@@ -42,7 +42,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private Image halfSpeedPortal, speedPortal1, speedPortal2, speedPortal3, speedPortal4;
     private Image logo, playButton, iconMenuButton, creatorMenuButton;
     private Image shipPortal;
-    private Image levelComplete;
+    private Image levelComplete, instructions;
     private Image iconselector;
 
     ArrayList<String> icons = new ArrayList<>();
@@ -123,6 +123,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         tracker.addImage(levelComplete, 14);
         iconselector = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDiconmenu.png");
         tracker.addImage(iconselector, 15);
+        instructions = Toolkit.getDefaultToolkit().getImage("GDinstructions.png");
+        tracker.addImage(instructions, 16);
 
 
         try {
@@ -135,7 +137,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
         try {
             AudioInputStream StereoMadness = AudioSystem.getAudioInputStream(new File("sfx/StereoMadness.wav"));
-            AudioInputStream MenuMusic = AudioSystem.getAudioInputStream(new File("sfx/GDmenumusic.wav"));
+            AudioInputStream MenuMusic = AudioSystem.getAudioInputStream(new File("Rrhar'il.wav"));
             AudioInputStream HoveringButton = AudioSystem.getAudioInputStream(new File("sfx/GDbuttonhover.wav"));
             AudioInputStream EndMusic = AudioSystem.getAudioInputStream(new File("sfx/Igallta.wav"));
             backgroundMusic1 = AudioSystem.getClip();
@@ -316,11 +318,12 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
     private boolean noClip = false;
 
+    private int frames = 0;
+
     private void updateGame() {
         if (bgImg != null) {
             bgOffsetX = (bgOffsetX - scrollSpeed) % bgImg.getWidth(this);
         }
-
 
         if (gameState == 0) {
             if (hoveringPlay && playScale < PLAY_SCALE_MAX) playScale += scaleStep;
@@ -334,67 +337,70 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
         }
 
-        if(gameState == 1) {
-            scrollSpeed = 7;
-            isOnGround = false;
-            velocityY += GRAVITY;
-            player.y += velocityY;
-            rotation = (rotation + ROT_SPEED) % 360;
-            for (int i = 0; i < spikes.size(); i++) {
-                if (player.intersects(hitboxes.get(i)) && !noClip) {
-                    System.exit(8);
-                }
-                spikes.get(i).x -= scrollSpeed;
-                hitboxes.get(i).x -= scrollSpeed;
+        if(gameState == 1 || gameState == -2) {
+            if (gameState == -2) scrollSpeed = 0;
+            else {
+                scrollSpeed = 7;
+                isOnGround = false;
+                velocityY += GRAVITY;
+                player.y += velocityY;
+                rotation = (rotation + ROT_SPEED) % 360;
+                for (int i = 0; i < spikes.size(); i++) {
+                    if (player.intersects(hitboxes.get(i)) && !noClip) {
+                        System.exit(8);
+                    }
+                    spikes.get(i).x -= scrollSpeed;
+                    hitboxes.get(i).x -= scrollSpeed;
 //                if(player.y < 300 && velocityY < 0){
 //                    spikes.get(i).y -= velocityY;
 //                    hitboxes.get(i).y -= velocityY;
 //                }
-            }
-            shipPort.x -= scrollSpeed;
-            for (int i = 0; i < blocks.size(); i++) {
-                blocks.get(i).x -= scrollSpeed;
+                }
+                shipPort.x -= scrollSpeed;
+                for (int i = 0; i < blocks.size(); i++) {
+                    blocks.get(i).x -= scrollSpeed;
 //                if(player.y < 300 && velocityY < 0){
 //                    blocks.get(i).y -= velocityY;
 //                }
-            }
-            for (Rectangle2D.Double block : blocks) {
-                // Check if player is overlapping block
-                if (player.intersects(block)) {
-                    // Player’s bottom is below block’s top – adjust
-                    if (velocityY > 0 && player.y + player.height >= block.y) {
-                        isOnGround = true;
-                        player.y = block.y - player.height; // snap to block top
-                        velocityY = 0;
-                        if (rotation <= 45) rotation = 0;
-                        else if (rotation <= 135) rotation = 90;
-                        else if (rotation <= 225) rotation = 180;
-                        else if (rotation <= 315) rotation = 270;
-                        else rotation = 0;
+                }
+                for (Rectangle2D.Double block : blocks) {
+                    // Check if player is overlapping block
+                    if (player.intersects(block)) {
+                        // Player’s bottom is below block’s top – adjust
+                        if (velocityY > 0 && player.y + player.height >= block.y) {
+                            isOnGround = true;
+                            player.y = block.y - player.height; // snap to block top
+                            velocityY = 0;
+                            if (rotation <= 45) rotation = 0;
+                            else if (rotation <= 135) rotation = 90;
+                            else if (rotation <= 225) rotation = 180;
+                            else if (rotation <= 315) rotation = 270;
+                            else rotation = 0;
+                        }
                     }
                 }
-            }
-            if (player.y > GROUND_Y) {
-                player.y = GROUND_Y;
-                velocityY = 0;
-                isOnGround = true;
-                if (rotation <= 45) rotation = 0;
-                else if (rotation <= 135) rotation = 90;
-                else if (rotation <= 225) rotation = 180;
-                else if (rotation <= 315) rotation = 270;
-                else rotation = 0;
-            }
-            if (player.intersects(shipPort)) {
-                gameState = 2;
-            }
-            if (gameState == 2) {
-                player.x = 0;
-                player.y = 500;
-                scrollSpeed = 0;
-                backgroundMusic2.stop();
-                if(endMusic != null){
-                    endMusic.setFramePosition(0);
-                    endMusic.loop(Clip.LOOP_CONTINUOUSLY);
+                if (player.y > GROUND_Y) {
+                    player.y = GROUND_Y;
+                    velocityY = 0;
+                    isOnGround = true;
+                    if (rotation <= 45) rotation = 0;
+                    else if (rotation <= 135) rotation = 90;
+                    else if (rotation <= 225) rotation = 180;
+                    else if (rotation <= 315) rotation = 270;
+                    else rotation = 0;
+                }
+                if (player.intersects(shipPort)) {
+                    gameState = 2;
+                }
+                if (gameState == 2) {
+                    player.x = 0;
+                    player.y = 500;
+                    scrollSpeed = 0;
+                    backgroundMusic2.stop();
+                    if (endMusic != null) {
+                        endMusic.setFramePosition(0);
+                        endMusic.loop(Clip.LOOP_CONTINUOUSLY);
+                    }
                 }
             }
         }
@@ -466,69 +472,75 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
 
         }
-        else if (gameState == 1) {
-            //moves the background backwards
-            if (bgImg != null) {
-                int bwBg = bgImg.getWidth(this);
-                for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
-                    g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), null);
-                }
+        else if (gameState == 1 || gameState == -2) {
+            if (gameState == -2) {
+                g2.setFont(new Font("Arial", Font.BOLD, 30));
+                g2.drawString("Paused - click to continue", 0, 0);
             }
-
-            for (Rectangle2D.Double spikeRect : spikes) {
-                int spikeHeight = spike.getHeight(this);
-                int spikeWidth = spike.getWidth(this);
-                spikeWidth /= 3;
-                spikeHeight /= 3;
-                g2.drawImage(spike, (int) spikeRect.x, (int) spikeRect.y, spikeWidth, spikeHeight, this);
-            }
-
-            if(shipPortal != null){
-                g2.drawImage(shipPortal, (int) shipPort.x, (int) shipPort.y, 40, 120, this);
-                g2.setColor(Color.MAGENTA);
-                g2.fillRect((int) shipPort.x, 120, 40, 120);
-            }
-            else{
-                System.out.println("Nothing");
-            }
-
-            if (blockImg != null) {
-                int nativeBw = blockImg.getWidth(this);
-                int nativeBh = blockImg.getHeight(this);
-                int gapHeight = getHeight() - (GROUND_Y + playerSize);
-                int scaledBh = gapHeight / 3;
-                int scaledBw = nativeBw * scaledBh / nativeBh;
-                int startY = GROUND_Y + playerSize;
-                int offsetX = bgOffsetX % scaledBw;
-                for (int row = 0; row < 3; row++) {
-                    int y = startY + row * scaledBh;
-                    for (int i = -1; i <= getWidth() / scaledBw + 1; i++) {
-                        g2.drawImage(blockImg, offsetX + i * scaledBw, (int)(y - cameraY), scaledBw, scaledBh, null);
+                //moves the background backwards
+                if (bgImg != null) {
+                    int bwBg = bgImg.getWidth(this);
+                    for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
+                        g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), null);
                     }
                 }
-                for(Rectangle2D.Double r: blocks){
-                    g2.drawImage(blockImg, (int) r.x, (int) r.y, (int) r.width, (int) r.height, this);
-                }
-            }
 
-            if (playerImg != null) {
-                AffineTransform old = g2.getTransform();
-                double cx = player.x + playerSize / 2.0;
-                double cy = player.y + playerSize / 2.0;
-                g2.rotate(Math.toRadians(rotation), cx, cy);
-                g2.drawImage(playerImg, (int) player.x, (int) (player.y - cameraY), playerSize, playerSize, null);
-                g2.setTransform(old);
-            } else {
-                g2.setColor(Color.BLUE);
-                g2.fill(player);
-            }
+                for (Rectangle2D.Double spikeRect : spikes) {
+                    int spikeHeight = spike.getHeight(this);
+                    int spikeWidth = spike.getWidth(this);
+                    spikeWidth /= 3;
+                    spikeHeight /= 3;
+                    g2.drawImage(spike, (int) spikeRect.x, (int) spikeRect.y, spikeWidth, spikeHeight, this);
+                }
+
+                if (shipPortal != null) {
+                    g2.drawImage(shipPortal, (int) shipPort.x, (int) shipPort.y, 40, 120, this);
+                    g2.setColor(Color.MAGENTA);
+                    g2.fillRect((int) shipPort.x, 120, 40, 120);
+                } else {
+                    System.out.println("Nothing");
+                }
+
+                if (blockImg != null) {
+                    int nativeBw = blockImg.getWidth(this);
+                    int nativeBh = blockImg.getHeight(this);
+                    int gapHeight = getHeight() - (GROUND_Y + playerSize);
+                    int scaledBh = gapHeight / 3;
+                    int scaledBw = nativeBw * scaledBh / nativeBh;
+                    int startY = GROUND_Y + playerSize;
+                    int offsetX = bgOffsetX % scaledBw;
+                    for (int row = 0; row < 3; row++) {
+                        int y = startY + row * scaledBh;
+                        for (int i = -1; i <= getWidth() / scaledBw + 1; i++) {
+                            g2.drawImage(blockImg, offsetX + i * scaledBw, (int) (y - cameraY), scaledBw, scaledBh, null);
+                        }
+                    }
+                    for (Rectangle2D.Double r : blocks) {
+                        g2.drawImage(blockImg, (int) r.x, (int) r.y, (int) r.width, (int) r.height, this);
+                    }
+                }
+
+                if (playerImg != null) {
+                    AffineTransform old = g2.getTransform();
+                    double cx = player.x + playerSize / 2.0;
+                    double cy = player.y + playerSize / 2.0;
+                    g2.rotate(Math.toRadians(rotation), cx, cy);
+                    g2.drawImage(playerImg, (int) player.x, (int) (player.y - cameraY), playerSize, playerSize, null);
+                    g2.setTransform(old);
+                } else {
+                    g2.setColor(Color.BLUE);
+                    g2.fill(player);
+                }
+
         }
         else if (gameState == 2){
             g2.drawImage(levelComplete, 0, 0, 900, 700, this);
             g2.setFont(new Font("Arial", Font.BOLD, 30));
             g2.drawString("Click anywhere to continue", 450, 550);
         }
-
+        else if (gameState == -1){
+            g2.drawImage(instructions, 0, 0, 900, 700, this);
+        }
     }
 
     private boolean wasHoveringPlay    = false;
@@ -575,6 +587,13 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         if ((code == KeyEvent.VK_SPACE || code == KeyEvent.VK_UP) && isOnGround) {
             velocityY = JUMP_VELOCITY;
             isOnGround = false;
+        }
+        else if (code == KeyEvent.VK_ESCAPE){
+            gameState = -2;
+            if (backgroundMusic2.isRunning()) {
+                frames = backgroundMusic2.getFramePosition();
+                backgroundMusic2.stop();
+            }
         }
     }
 
@@ -645,6 +664,12 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             resetGame();
             gameState = 0;
             endMusic.stop();
+        }
+        if(gameState == -1) gameState = 0;
+        if(gameState == -2){
+            gameState = 1;
+            backgroundMusic2.setFramePosition(frames);
+            backgroundMusic2.start();
         }
     }
     public void mousePressed(MouseEvent e) {}
