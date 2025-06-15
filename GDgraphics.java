@@ -188,51 +188,58 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         MediaTracker tracker = new MediaTracker(this);
         halfSpeedPortal = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDspeedportal0.5.gif");
         tracker.addImage(halfSpeedPortal, 0);
-        speedPortal1 = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDspeedportal1.gif");
-        tracker.addImage(speedPortal1, 1);
-        speedPortal2 = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDspeedportal2.gif");
-        tracker.addImage(speedPortal2, 2);
-        speedPortal3 = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDspeedportal3.gif");
-        tracker.addImage(speedPortal3, 3);
-        speedPortal4 = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDspeedportal4.gif");
-        tracker.addImage(speedPortal4, 4);
-        playerImg = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDdefaulticon.png");
-        tracker.addImage(playerImg, 5);
-        blockImg = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDblock.png");
-        tracker.addImage(blockImg, 6);
-        bgImg = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDbackground.png");
-        tracker.addImage(bgImg, 7);
-        spike = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDspike.png");
-        tracker.addImage(spike, 8);
-        logo = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDlogo.png");
-        tracker.addImage(logo, 9);
-        playButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDplaybutton.png");
-        tracker.addImage(playButton, 10);
-        iconMenuButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDiconchoosingbutton2.png");
-        tracker.addImage(iconMenuButton, 11);
+        speedPortal1    = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDspeedportal1.gif");
+        tracker.addImage(speedPortal1,    1);
+        speedPortal2    = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDspeedportal2.gif");
+        tracker.addImage(speedPortal2,    2);
+        speedPortal3    = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDspeedportal3.gif");
+        tracker.addImage(speedPortal3,    3);
+        speedPortal4    = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDspeedportal4.gif");
+        tracker.addImage(speedPortal4,    4);
+
+// block, background, spike
+        blockImg        = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDblock.png");
+        tracker.addImage(blockImg,        5);
+        bgImg           = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDbackground.png");
+        tracker.addImage(bgImg,           6);
+        spike           = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDspike.png");
+        tracker.addImage(spike,           7);
+
+// logo & menu buttons
+        logo            = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDlogo.png");
+        tracker.addImage(logo,            8);
+        playButton      = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDplaybutton.png");
+        tracker.addImage(playButton,      9);
+        iconMenuButton  = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDiconchoosingbutton2.png");
+        tracker.addImage(iconMenuButton, 10);
         creatorMenuButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDcreatormenubutton2.png");
-        tracker.addImage(creatorMenuButton, 12);
-        shipPortal = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDshipportal.gif");
-        tracker.addImage(shipPortal, 13);
-        levelComplete = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDlevelcomplete.png");
-        tracker.addImage(levelComplete, 14);
-        iconselector = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDiconmenu.png");
-        tracker.addImage(iconselector, 15);
-        instructions = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDinstructions.png");
-        tracker.addImage(instructions, 16);
-        creditsImage = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDcredits.png");
-        tracker.addImage(creditsImage, 17);
-        greenButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDinfobutton.png");
-        tracker.addImage(greenButton, 18);
-        blueButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDcreditsbutton.png");
+        tracker.addImage(creatorMenuButton,11);
 
+// portals & end‐screen art
+        shipPortal      = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDshipportal.gif");
+        tracker.addImage(shipPortal,     12);
+        levelComplete   = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDlevelcomplete.png");
+        tracker.addImage(levelComplete,  13);
 
+// instructions & credits
+        instructions    = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDinstructions.png");
+        tracker.addImage(instructions,   14);
+        creditsImage    = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDcredits.png");
+        tracker.addImage(creditsImage,   15);
+
+// info/credits icons
+        greenButton     = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDinfobutton.png");
+        tracker.addImage(greenButton,    16);
+        blueButton      = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDcreditsbutton.png");
+        tracker.addImage(blueButton,     17);
 
         try {
             tracker.waitForAll();
         } catch (InterruptedException e) {
-            System.out.println("Wow");
+            e.printStackTrace();
         }
+
+        currentPlayerImg = Toolkit.getDefaultToolkit().getImage(selectedIconPath);
 
         // Initializing player icon
         player = new Rectangle2D.Double(50, GROUND_Y, playerSize, playerSize);
@@ -264,8 +271,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             instructionsMusic.open(Instructions);
 
 
-            icon1Rect = new Rectangle(iconBtnX,                              iconBtnY, iconBtnSize, iconBtnSize);
-            icon2Rect = new Rectangle(iconBtnX + iconBtnSpacing,              iconBtnY, iconBtnSize, iconBtnSize);
+            icon1Rect = new Rectangle(iconBtnX,iconBtnY, iconBtnSize, iconBtnSize);
+            icon2Rect = new Rectangle(iconBtnX + iconBtnSpacing,iconBtnY, iconBtnSize, iconBtnSize);
 
             selectedIconPath = GDiconlocater.GDiconLocater(
                     selectedIcon,
@@ -656,8 +663,91 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             }
 
         }
+        else if (gameState == 5) {
+            if (bgImg != null) {
+                int bwBg = bgImg.getWidth(this);
+                for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
+                    g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), this);
+                }
+            }
+            g2.setFont(new Font("Arial", Font.BOLD, 18));
+            g2.setColor(Color.WHITE);
+            String msg = "Click anywhere to return (Press icon selectors to select icon):";
+            int tw = g2.getFontMetrics().stringWidth(msg);
+            g2.drawString(msg, (WIDTH - tw) / 2, HEIGHT - 30);
+            Image img1 = Toolkit.getDefaultToolkit().getImage(
+                    GDiconlocater.GDiconLocater(
+                            1,
+                            false,false,true, false,false,false,false,false,false,
+                            false,false,false,false,false,false,false,true,false
+                    )
+            );
+            Image img2 = Toolkit.getDefaultToolkit().getImage(
+                    GDiconlocater.GDiconLocater(
+                            2,
+                            false,false,true, false,false,false,false,false,false,
+                            false,false,false,false,false,false,false,true,false
+                    )
+            );
+            g2.drawImage(img1, icon1Rect.x, icon1Rect.y,
+                    icon1Rect.width, icon1Rect.height, this);
+            g2.drawImage(img2, icon2Rect.x, icon2Rect.y,
+                    icon2Rect.width, icon2Rect.height, this);
+
+            g2.setColor(Color.WHITE);
+            g2.setStroke(new BasicStroke(HIGHLIGHT_STROKE));
+            Rectangle selIconRect = (selectedIcon == 1) ? icon1Rect : icon2Rect;
+            g2.drawRect(selIconRect.x, selIconRect.y,
+                    selIconRect.width, selIconRect.height);
+
+            for (int i = 0; i < COLORS.length; i++) {
+                boolean[] o = new boolean[COLORS.length];
+                o[i]    = true;
+                boolean[] in = new boolean[COLORS.length];
+                in[7]   = true;  // white2
+                String path = GDiconlocater.GDiconLocater(
+                        selectedIcon,
+                        o[0],o[1],o[2],o[3],o[4],o[5],o[6],o[7],o[8],
+                        in[0],in[1],in[2],in[3],in[4],in[5],in[6],in[7],in[8]
+                );
+                Image iconC = Toolkit.getDefaultToolkit().getImage(path);
+                Rectangle r = outerColorRects[i];
+                g2.drawImage(iconC, r.x, r.y, r.width, r.height, this);
+
+                if (i == selectedColor1Index) {
+                    g2.setColor(Color.WHITE);
+                    g2.setStroke(new BasicStroke(HIGHLIGHT_STROKE));
+                    g2.drawRect(r.x, r.y, r.width, r.height);
+                }
+            }
+
+            for (int j = 0; j < COLORS.length; j++) {
+                boolean[] o = new boolean[COLORS.length];
+                o[selectedColor1Index] = true;
+                boolean[] in = new boolean[COLORS.length];
+                in[j]                  = true;
+                String path = GDiconlocater.GDiconLocater(
+                        selectedIcon,
+                        o[0],o[1],o[2],o[3],o[4],o[5],o[6],o[7],o[8],
+                        in[0],in[1],in[2],in[3],in[4],in[5],in[6],in[7],in[8]
+                );
+                Image iconC = Toolkit.getDefaultToolkit().getImage(path);
+                Rectangle r = innerColorRects[j];
+                g2.drawImage(iconC, r.x, r.y, r.width, r.height, this);
+
+                if (j == selectedColor2Index) {
+                    g2.setColor(Color.WHITE);
+                    g2.setStroke(new BasicStroke(HIGHLIGHT_STROKE));
+                    g2.drawRect(r.x, r.y, r.width, r.height);
+                }
+            }
+
+            Image preview = Toolkit.getDefaultToolkit().getImage(selectedIconPath);
+            g2.drawImage(preview, PREVIEW_X, PREVIEW_Y,
+                    PREVIEW_SIZE, PREVIEW_SIZE, this);
+        }
+
         else if (gameState == 1 || gameState == -2) {
-                //moves the background backwards
                 if (bgImg != null) {
                     int bwBg = bgImg.getWidth(this);
                     for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
@@ -703,17 +793,34 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                     }
                 }
 
-                if (playerImg != null) { // Player icon
-                    AffineTransform old = g2.getTransform();
-                    double cx = player.x + playerSize / 2.0;
-                    double cy = player.y + playerSize / 2.0;
-                    g2.rotate(Math.toRadians(rotation), cx, cy);
-                    g2.drawImage(playerImg, (int) player.x, (int) (player.y - cameraY), playerSize, playerSize, null);
-                    g2.setTransform(old);
-                } else {
-                    g2.setColor(Color.BLUE);
-                    g2.fill(player);
-                }
+            // pick which icon to draw
+            Image iconToDraw;
+            if (currentPlayerImg != null) {
+                iconToDraw = currentPlayerImg;
+            } else {
+                iconToDraw = defaultPlayerImg;
+            }
+
+            if (iconToDraw != null) {
+                AffineTransform old = g2.getTransform();
+                double cx = player.x + playerSize / 2.0;
+                double cy = player.y + playerSize / 2.0;
+                g2.rotate(Math.toRadians(rotation), cx, cy);
+                g2.drawImage(
+                        iconToDraw,
+                        (int) player.x,
+                        (int) player.y,
+                        playerSize,
+                        playerSize,
+                        this
+                );
+                g2.setTransform(old);
+            } else {
+                g2.setColor(Color.BLUE);
+                g2.fill(player);
+            }
+
+
             if (gameState == -2) { // Drawing pause screen
                 g2.setFont(new Font("Arial", Font.BOLD, 30));
                 g2.drawString("Paused - click to continue", 0, 0);
@@ -730,86 +837,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         else if (gameState == 4){ // Credits screen
             g2.drawImage(creditsImage, 0, 0, 900, 700, this);
         }
-        if (gameState == 5) {
-            // 1) Draw Icon buttons
-            Image img1 = Toolkit.getDefaultToolkit().getImage(
-                    GDiconlocater.GDiconLocater(
-                            1,
-                            false,false,true, false,false,false,false,false,false,
-                            false,false,false,false,false,false,false,true,false
-                    )
-            );
-            Image img2 = Toolkit.getDefaultToolkit().getImage(
-                    GDiconlocater.GDiconLocater(
-                            2,
-                            false,false,true, false,false,false,false,false,false,
-                            false,false,false,false,false,false,false,true,false
-                    )
-            );
-            g2.drawImage(img1, icon1Rect.x, icon1Rect.y,
-                    icon1Rect.width, icon1Rect.height, this);
-            g2.drawImage(img2, icon2Rect.x, icon2Rect.y,
-                    icon2Rect.width, icon2Rect.height, this);
 
-            // Highlight selected icon
-            g2.setColor(Color.WHITE);
-            g2.setStroke(new BasicStroke(HIGHLIGHT_STROKE));
-            Rectangle selIconRect = (selectedIcon == 1) ? icon1Rect : icon2Rect;
-            g2.drawRect(selIconRect.x, selIconRect.y,
-                    selIconRect.width, selIconRect.height);
-
-            // 2) Outer‐color row (inner always white by default here)
-            for (int i = 0; i < COLORS.length; i++) {
-                // build path with outer=i, inner=white(7)
-                boolean[] o = new boolean[COLORS.length];
-                o[i]    = true;
-                boolean[] in = new boolean[COLORS.length];
-                in[7]   = true;  // white2
-                String path = GDiconlocater.GDiconLocater(
-                        selectedIcon,
-                        o[0],o[1],o[2],o[3],o[4],o[5],o[6],o[7],o[8],
-                        in[0],in[1],in[2],in[3],in[4],in[5],in[6],in[7],in[8]
-                );
-                Image iconC = Toolkit.getDefaultToolkit().getImage(path);
-                Rectangle r = outerColorRects[i];
-                g2.drawImage(iconC, r.x, r.y, r.width, r.height, this);
-
-                // highlight if this is selected outer
-                if (i == selectedColor1Index) {
-                    g2.setColor(Color.WHITE);
-                    g2.setStroke(new BasicStroke(HIGHLIGHT_STROKE));
-                    g2.drawRect(r.x, r.y, r.width, r.height);
-                }
-            }
-
-            // 3) Inner‐color row (outer = current selection)
-            for (int j = 0; j < COLORS.length; j++) {
-                boolean[] o = new boolean[COLORS.length];
-                o[selectedColor1Index] = true;
-                boolean[] in = new boolean[COLORS.length];
-                in[j]                  = true;
-                String path = GDiconlocater.GDiconLocater(
-                        selectedIcon,
-                        o[0],o[1],o[2],o[3],o[4],o[5],o[6],o[7],o[8],
-                        in[0],in[1],in[2],in[3],in[4],in[5],in[6],in[7],in[8]
-                );
-                Image iconC = Toolkit.getDefaultToolkit().getImage(path);
-                Rectangle r = innerColorRects[j];
-                g2.drawImage(iconC, r.x, r.y, r.width, r.height, this);
-
-                // highlight selected inner
-                if (j == selectedColor2Index) {
-                    g2.setColor(Color.WHITE);
-                    g2.setStroke(new BasicStroke(HIGHLIGHT_STROKE));
-                    g2.drawRect(r.x, r.y, r.width, r.height);
-                }
-            }
-
-            // 4) Preview currently built path
-            Image preview = Toolkit.getDefaultToolkit().getImage(selectedIconPath);
-            g2.drawImage(preview, PREVIEW_X, PREVIEW_Y,
-                    PREVIEW_SIZE, PREVIEW_SIZE, this);
-        }
     }
 
     private boolean wasHoveringPlay    = false;
@@ -932,133 +960,137 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
 
     public void mouseDragged(MouseEvent e) {}
+    @Override
     public void mouseClicked(MouseEvent e) {
         Point p = e.getPoint();
-        // Check to see which button was pressed
-        boolean alreadyClicked = false; // Avoiding accidental inputs
-        if (gameState == 0 && playButtonBounds != null && playButtonBounds.contains(e.getPoint())) {
-            gameState = 1;
-            noClip = false;
-            if (backgroundMusic1 != null && backgroundMusic1.isRunning()) {
-                backgroundMusic1.stop();
-            }
-            if (backgroundMusic2 != null && !backgroundMusic2.isRunning()) {
-                backgroundMusic2.setFramePosition(0);
-                backgroundMusic2.loop(Clip.LOOP_CONTINUOUSLY);
-            }
-        }
 
-        else if (gameState == 0 && iconMenuButtonBounds != null && iconMenuButtonBounds.contains(e.getPoint())) {
-            gameState = 5;
-            noClip = false;
-            if (backgroundMusic1 != null && backgroundMusic1.isRunning()) {
-                backgroundMusic1.stop();
-            }
-            if (backgroundMusic2 != null && !backgroundMusic2.isRunning()) {
-                backgroundMusic2.setFramePosition(0);
-                backgroundMusic2.loop(Clip.LOOP_CONTINUOUSLY);
-            }
-        }
-
-        else if (gameState == 0 && creatorMenuButtonBounds != null && creatorMenuButtonBounds.contains(e.getPoint())) {
-            gameState = 1;
-            noClip = true; // Cheat is triggered
-            if (backgroundMusic1 != null && backgroundMusic1.isRunning()) {
-                backgroundMusic1.stop();
-            }
-            if (backgroundMusic2 != null && !backgroundMusic2.isRunning()) {
-                backgroundMusic2.setFramePosition(0);
-                backgroundMusic2.loop(Clip.LOOP_CONTINUOUSLY);
-            }
-        }
-
-        if (gameState == 0 && instructionsBounds != null && instructionsBounds.contains(e.getPoint())){
-            gameState = -1;
-            if (backgroundMusic1 != null && backgroundMusic1.isRunning()) {
-                backgroundMusic1.stop();
-            }
-            if(!instructionsMusic.isRunning() && instructionsMusic != null){
-                instructionsMusic.setFramePosition(0);
-                instructionsMusic.start();
-            }
-            alreadyClicked = true;
-        }
-
-        else if (gameState == 0 && creditsBounds != null && creditsBounds.contains(e.getPoint())){
-            gameState = 4;
-            if (backgroundMusic1 != null && backgroundMusic1.isRunning()) {
-                backgroundMusic1.stop();
-            }
-            if (!credits.isRunning() && credits != null){
-                credits.setFramePosition(0);
-                credits.loop(Clip.LOOP_CONTINUOUSLY);
-            }
-            alreadyClicked = true;
-        }
-        else if((gameState == -1 || gameState == 3|| gameState == 4) && !alreadyClicked){ // Game goes back to menu screen
-            gameState = 0;
-            credits.stop();
-            instructionsMusic.stop();
-            icon.stop();
-            backgroundMusic1.setFramePosition(0);
-            backgroundMusic1.start();
-            alreadyClicked = false;
-        }
-        if (gameState == 2){ // Resets game to the menu screen
-            resetGame();
-            gameState = 0;
-            endMusic.stop();
-        }
-        if(gameState == -2){ // Resumes game
-            gameState = 1;
-            backgroundMusic2.setFramePosition(frames);
-            backgroundMusic2.start();
-        }
-        if (gameState == 0){
-
-        }
         if (gameState == 5) {
-            // icon buttons
+            boolean hitSelector = false;
+
+            // 1) icon buttons
             if (icon1Rect.contains(p)) {
                 selectedIcon = 1;
-                selectedColor1Index = 2;  // reset to Yellow
-                selectedColor2Index = 7;  // reset to White
+                selectedColor1Index = 2; // reset to yellow
+                selectedColor2Index = 7; // reset to white
+                hitSelector = true;
             }
             else if (icon2Rect.contains(p)) {
                 selectedIcon = 2;
                 selectedColor1Index = 2;
                 selectedColor2Index = 7;
+                hitSelector = true;
             }
 
-            // outer‐color clicks
-            for (int i = 0; i < COLORS.length; i++) {
+            for (int i = 0; i < outerColorRects.length; i++) {
                 if (outerColorRects[i].contains(p)) {
                     selectedColor1Index = i;
+                    hitSelector = true;
+                    break;
                 }
             }
 
-            // inner‐color clicks
-            for (int j = 0; j < COLORS.length; j++) {
+            for (int j = 0; j < innerColorRects.length; j++) {
                 if (innerColorRects[j].contains(p)) {
                     selectedColor2Index = j;
+                    hitSelector = true;
+                    break;
                 }
             }
 
-            // rebuild selectedIconPath
-            boolean[] o = new boolean[COLORS.length];
-            boolean[] in = new boolean[COLORS.length];
-            o[selectedColor1Index] = true;
-            in[selectedColor2Index] = true;
-            selectedIconPath = GDiconlocater.GDiconLocater(
-                    selectedIcon,
-                    o[0],o[1],o[2],o[3],o[4],o[5],o[6],o[7],o[8],
-                    in[0],in[1],in[2],in[3],in[4],in[5],in[6],in[7],in[8]
-            );
+            if (hitSelector) {
+                boolean[] o  = new boolean[COLORS.length];
+                boolean[] in = new boolean[COLORS.length];
+                o[selectedColor1Index] = true;
+                in[selectedColor2Index] = true;
+                selectedIconPath = GDiconlocater.GDiconLocater(
+                        selectedIcon,
+                        o[0],o[1],o[2],o[3],o[4],o[5],o[6],o[7],o[8],
+                        in[0],in[1],in[2],in[3],in[4],in[5],in[6],in[7],in[8]
+                );
+                currentPlayerImg = Toolkit.getDefaultToolkit().getImage(selectedIconPath);
+                repaint();
+                return;  // stay in state 5
+            }
 
+            gameState = 0;
             repaint();
-            return;  // skip other click‐logic
+            return;
+        }
+
+        if (gameState == 0 && playButtonBounds != null && playButtonBounds.contains(p)) {
+            gameState = 1;
+            noClip = false;
+            backgroundMusic1.stop();
+            backgroundMusic2.setFramePosition(0);
+            backgroundMusic2.loop(Clip.LOOP_CONTINUOUSLY);
+            repaint();
+            return;
+        }
+        else if (gameState == 0 && iconMenuButtonBounds != null && iconMenuButtonBounds.contains(p)) {
+            gameState = 5;
+            noClip = false;
+            backgroundMusic1.stop();
+            backgroundMusic2.setFramePosition(0);
+            backgroundMusic2.loop(Clip.LOOP_CONTINUOUSLY);
+            repaint();
+            return;
+        }
+        else if (gameState == 0 && creatorMenuButtonBounds != null && creatorMenuButtonBounds.contains(p)) {
+            gameState = 1;
+            noClip = true;
+            backgroundMusic1.stop();
+            backgroundMusic2.setFramePosition(0);
+            backgroundMusic2.loop(Clip.LOOP_CONTINUOUSLY);
+            repaint();
+            return;
+        }
+        else if (gameState == 0 && instructionsBounds != null && instructionsBounds.contains(p)) {
+            gameState = -1;
+            backgroundMusic1.stop();
+            instructionsMusic.setFramePosition(0);
+            instructionsMusic.loop(Clip.LOOP_CONTINUOUSLY);
+            repaint();
+            return;
+        }
+        else if (gameState == 0 && creditsBounds != null && creditsBounds.contains(p)) {
+            gameState = 4;
+            backgroundMusic1.stop();
+            credits.setFramePosition(0);
+            credits.loop(Clip.LOOP_CONTINUOUSLY);
+            repaint();
+            return;
+        }
+
+        if (gameState == -1 || gameState == 3 || gameState == 4) {
+            gameState = 0;
+            credits.stop();
+            instructionsMusic.stop();
+            icon.stop();
+            backgroundMusic1.setFramePosition(0);
+            backgroundMusic1.loop(Clip.LOOP_CONTINUOUSLY);
+            repaint();
+            return;
+        }
+
+        if (gameState == 2) {
+            resetGame();
+            gameState = 0;
+            endMusic.stop();
+            repaint();
+            return;
+        }
+
+        if (gameState == -2) {
+            gameState = 1;
+            backgroundMusic2.setFramePosition(frames);
+            backgroundMusic2.loop(Clip.LOOP_CONTINUOUSLY);
+            repaint();
+            return;
         }
     }
+
+
+
     public void mousePressed(MouseEvent e) {}
     public void mouseReleased(MouseEvent e) {}
     public void mouseEntered(MouseEvent e) {}
