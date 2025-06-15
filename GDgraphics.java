@@ -782,6 +782,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         boolean alreadyClicked = false; // Avoiding accidental inputs
         if (gameState == 0 && playButtonBounds != null && playButtonBounds.contains(e.getPoint())) {
             gameState = 1;
+            noClip = false;
             if (backgroundMusic1 != null && backgroundMusic1.isRunning()) {
                 backgroundMusic1.stop();
             }
@@ -793,6 +794,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
         else if (gameState == 0 && iconMenuButtonBounds != null && iconMenuButtonBounds.contains(e.getPoint())) {
             gameState = 1;
+            noClip = false;
             if (backgroundMusic1 != null && backgroundMusic1.isRunning()) {
                 backgroundMusic1.stop();
             }
