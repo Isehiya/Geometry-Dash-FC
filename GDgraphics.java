@@ -22,6 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 public class GDgraphics extends JPanel implements KeyListener, MouseListener, MouseMotionListener {
 
+
     //Game constants
     public static final int WIDTH = 800;
     public static final int HEIGHT = 600;
@@ -124,7 +125,31 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private int previewSize    = 128;
     private int highlightStroke=   4;
 
+    private final String[] COLORS = {
+            "red","orange","yellow","green","blue","indigo","violet","white","black"
+    };
+    private final int ICON_BTN_SIZE    = 64;
+    private final int ICON_BTN_SPACING = 100;
+    private final int ICON1_X = 100, ICON1_Y = 100;
+    private final int PREVIEW_X = 300, PREVIEW_Y = 150, PREVIEW_SIZE = 128;
+
+    private final int COLOR_BTN_SIZE    = 48;
+    private final int COLOR_BTN_SPACING = 8;
+    private final int OUTER_ROW_X = ICON1_X, OUTER_ROW_Y = ICON1_Y + ICON_BTN_SIZE + 40;
+    private final int INNER_ROW_X = OUTER_ROW_X, INNER_ROW_Y = OUTER_ROW_Y + COLOR_BTN_SIZE + 20;
+
+    private final int HIGHLIGHT_STROKE = 3;
+
+    private Rectangle[] outerColorRects = new Rectangle[COLORS.length];
+    private Rectangle[] innerColorRects = new Rectangle[COLORS.length];
+    private Image defaultPlayerImg;
+    private Image currentPlayerImg;
+
+
+
+
     public GDgraphics() throws UnsupportedAudioFileException, IOException {
+
         // Setting game dimensions and initializing keyboard and mouse
         setPreferredSize(new Dimension(WIDTH, HEIGHT));
         setBackground(Color.WHITE);
@@ -136,6 +161,28 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         // Player icon selection (may or may not be used)
             icons.add(0,"1");
             icons.add(1,"2");
+
+        icon1Rect = new Rectangle(ICON1_X, ICON1_Y, ICON_BTN_SIZE, ICON_BTN_SIZE);
+        icon2Rect = new Rectangle(ICON1_X + ICON_BTN_SPACING, ICON1_Y,
+                ICON_BTN_SIZE, ICON_BTN_SIZE);
+
+        // Color-combo rows
+        for (int i = 0; i < COLORS.length; i++) {
+            int ox = OUTER_ROW_X + i * (COLOR_BTN_SIZE + COLOR_BTN_SPACING);
+            int oy = OUTER_ROW_Y;
+            outerColorRects[i] = new Rectangle(ox, oy, COLOR_BTN_SIZE, COLOR_BTN_SIZE);
+
+            int ix = INNER_ROW_X + i * (COLOR_BTN_SIZE + COLOR_BTN_SPACING);
+            int iy = INNER_ROW_Y;
+            innerColorRects[i] = new Rectangle(ix, iy, COLOR_BTN_SIZE, COLOR_BTN_SIZE);
+        }
+
+        // Build initial default path:
+        selectedIconPath = GDiconlocater.GDiconLocater(
+                selectedIcon,
+                false,false,true, false,false,false,false,false,false,  // yellow1
+                false,false,false,false,false,false,false,true,false   // white2
+        );
 
         // Loading game images
         MediaTracker tracker = new MediaTracker(this);
@@ -178,6 +225,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         greenButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDinfobutton.png");
         tracker.addImage(greenButton, 18);
         blueButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDcreditsbutton.png");
+
 
 
         try {
@@ -683,49 +731,84 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             g2.drawImage(creditsImage, 0, 0, 900, 700, this);
         }
         if (gameState == 5) {
-            g2.drawImage(iconselector,0, 0, 900, 700, this);
-
-            Image iconImg1 = Toolkit.getDefaultToolkit().getImage(
+            // 1) Draw Icon buttons
+            Image img1 = Toolkit.getDefaultToolkit().getImage(
                     GDiconlocater.GDiconLocater(
                             1,
-                            false,false,true,  false,false,false,false,false,false,  // yellow1
-                            false,false,false,false,false,false,false,true,false    // white2
+                            false,false,true, false,false,false,false,false,false,
+                            false,false,false,false,false,false,false,true,false
                     )
             );
-            g2.drawImage(iconImg1,
-                    icon1Rect.x, icon1Rect.y,
-                    iconBtnSize, iconBtnSize,
-                    this);
-
-            // Load and draw icon #2
-            Image iconImg2 = Toolkit.getDefaultToolkit().getImage(
+            Image img2 = Toolkit.getDefaultToolkit().getImage(
                     GDiconlocater.GDiconLocater(
                             2,
-                            false,false,true,  false,false,false,false,false,false,  // yellow1
-                            false,false,false,false,false,false,false,true,false    // white2
+                            false,false,true, false,false,false,false,false,false,
+                            false,false,false,false,false,false,false,true,false
                     )
             );
-            g2.drawImage(iconImg2,
-                    icon2Rect.x, icon2Rect.y,
-                    iconBtnSize, iconBtnSize,
-                    this);
+            g2.drawImage(img1, icon1Rect.x, icon1Rect.y,
+                    icon1Rect.width, icon1Rect.height, this);
+            g2.drawImage(img2, icon2Rect.x, icon2Rect.y,
+                    icon2Rect.width, icon2Rect.height, this);
 
-            // ─── Highlight Selected Icon ───────────────────────────────
+            // Highlight selected icon
             g2.setColor(Color.WHITE);
-            g2.setStroke(new BasicStroke(highlightStroke));
-            if (selectedIcon == 1) {
-                g2.drawRect(icon1Rect.x, icon1Rect.y,
-                        icon1Rect.width, icon1Rect.height);
-            } else {
-                g2.drawRect(icon2Rect.x, icon2Rect.y,
-                        icon2Rect.width, icon2Rect.height);
+            g2.setStroke(new BasicStroke(HIGHLIGHT_STROKE));
+            Rectangle selIconRect = (selectedIcon == 1) ? icon1Rect : icon2Rect;
+            g2.drawRect(selIconRect.x, selIconRect.y,
+                    selIconRect.width, selIconRect.height);
+
+            // 2) Outer‐color row (inner always white by default here)
+            for (int i = 0; i < COLORS.length; i++) {
+                // build path with outer=i, inner=white(7)
+                boolean[] o = new boolean[COLORS.length];
+                o[i]    = true;
+                boolean[] in = new boolean[COLORS.length];
+                in[7]   = true;  // white2
+                String path = GDiconlocater.GDiconLocater(
+                        selectedIcon,
+                        o[0],o[1],o[2],o[3],o[4],o[5],o[6],o[7],o[8],
+                        in[0],in[1],in[2],in[3],in[4],in[5],in[6],in[7],in[8]
+                );
+                Image iconC = Toolkit.getDefaultToolkit().getImage(path);
+                Rectangle r = outerColorRects[i];
+                g2.drawImage(iconC, r.x, r.y, r.width, r.height, this);
+
+                // highlight if this is selected outer
+                if (i == selectedColor1Index) {
+                    g2.setColor(Color.WHITE);
+                    g2.setStroke(new BasicStroke(HIGHLIGHT_STROKE));
+                    g2.drawRect(r.x, r.y, r.width, r.height);
+                }
             }
 
+            // 3) Inner‐color row (outer = current selection)
+            for (int j = 0; j < COLORS.length; j++) {
+                boolean[] o = new boolean[COLORS.length];
+                o[selectedColor1Index] = true;
+                boolean[] in = new boolean[COLORS.length];
+                in[j]                  = true;
+                String path = GDiconlocater.GDiconLocater(
+                        selectedIcon,
+                        o[0],o[1],o[2],o[3],o[4],o[5],o[6],o[7],o[8],
+                        in[0],in[1],in[2],in[3],in[4],in[5],in[6],in[7],in[8]
+                );
+                Image iconC = Toolkit.getDefaultToolkit().getImage(path);
+                Rectangle r = innerColorRects[j];
+                g2.drawImage(iconC, r.x, r.y, r.width, r.height, this);
+
+                // highlight selected inner
+                if (j == selectedColor2Index) {
+                    g2.setColor(Color.WHITE);
+                    g2.setStroke(new BasicStroke(HIGHLIGHT_STROKE));
+                    g2.drawRect(r.x, r.y, r.width, r.height);
+                }
+            }
+
+            // 4) Preview currently built path
             Image preview = Toolkit.getDefaultToolkit().getImage(selectedIconPath);
-            g2.drawImage(preview,
-                    previewX, previewY,
-                    previewSize, previewSize,
-                    this);
+            g2.drawImage(preview, PREVIEW_X, PREVIEW_Y,
+                    PREVIEW_SIZE, PREVIEW_SIZE, this);
         }
     }
 
@@ -850,6 +933,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
     public void mouseDragged(MouseEvent e) {}
     public void mouseClicked(MouseEvent e) {
+        Point p = e.getPoint();
         // Check to see which button was pressed
         boolean alreadyClicked = false; // Avoiding accidental inputs
         if (gameState == 0 && playButtonBounds != null && playButtonBounds.contains(e.getPoint())) {
@@ -934,26 +1018,45 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
         }
         if (gameState == 5) {
-            Point p = e.getPoint();
-
-            if (icon1Rect.contains(p) && selectedIcon != 1) {
+            // icon buttons
+            if (icon1Rect.contains(p)) {
                 selectedIcon = 1;
-                // reset to default yellow1/white2
-                yellow1 = true; white2 = true;
+                selectedColor1Index = 2;  // reset to Yellow
+                selectedColor2Index = 7;  // reset to White
             }
-            else if (icon2Rect.contains(p) && selectedIcon != 2) {
+            else if (icon2Rect.contains(p)) {
                 selectedIcon = 2;
-                yellow1 = true; white2 = true;
+                selectedColor1Index = 2;
+                selectedColor2Index = 7;
             }
 
-            // rebuild path
+            // outer‐color clicks
+            for (int i = 0; i < COLORS.length; i++) {
+                if (outerColorRects[i].contains(p)) {
+                    selectedColor1Index = i;
+                }
+            }
+
+            // inner‐color clicks
+            for (int j = 0; j < COLORS.length; j++) {
+                if (innerColorRects[j].contains(p)) {
+                    selectedColor2Index = j;
+                }
+            }
+
+            // rebuild selectedIconPath
+            boolean[] o = new boolean[COLORS.length];
+            boolean[] in = new boolean[COLORS.length];
+            o[selectedColor1Index] = true;
+            in[selectedColor2Index] = true;
             selectedIconPath = GDiconlocater.GDiconLocater(
                     selectedIcon,
-                    red1, orange1, yellow1, green1, blue1, indigo1, violet1, white1, black1,
-                    red2, orange2, yellow2, green2, blue2, indigo2, violet2, white2, black2
+                    o[0],o[1],o[2],o[3],o[4],o[5],o[6],o[7],o[8],
+                    in[0],in[1],in[2],in[3],in[4],in[5],in[6],in[7],in[8]
             );
+
             repaint();
-            return;
+            return;  // skip other click‐logic
         }
     }
     public void mousePressed(MouseEvent e) {}
