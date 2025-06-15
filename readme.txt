@@ -5,7 +5,7 @@ Responsibilities:
 
 Jacob - Menu screen, icon selection, instructions screen, testing game physics, adding pictures
 
-Andy - Gameplay, creating the level, adding music, testing game physics
+Andy - Gameplay, creating the level, adding music, adding menu features, icon selection, testing game physics
 
 
 How to play:
