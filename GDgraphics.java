@@ -57,6 +57,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     Clip backgroundMusic1, backgroundMusic2, endMusic;
     Clip buttonHover, dead;
     Clip icon, credits, instructionsMusic;
+    Clip iconselectormusic;
 
     // Game images
     private Image playerImg, blockImg, bgImg, spike;
@@ -66,8 +67,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private Image logo, playButton, iconMenuButton, creatorMenuButton, greenButton, blueButton;
     private Image shipPortal;
     private Image levelComplete, instructions, creditsImage;
-    private Image iconselector;
-    private Image iconmenu;
+
 
     ArrayList<String> icons = new ArrayList<>();
 
@@ -104,7 +104,6 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private static final double CREATOR_SCALE_MIN = 0.80;
     private double creatorScale = 0.8;
 
-    // End portal (originally a ship portal)
     private Rectangle2D.Double endPort = new Rectangle2D.Double(11000, 420, 40, 200);
     private int selectedIconNumber = 1;
     private int selectedColor1Index = 2;
@@ -253,6 +252,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             AudioInputStream Icon = AudioSystem.getAudioInputStream(new File("sfx/Isolation.wav"));
             AudioInputStream Credits = AudioSystem.getAudioInputStream(new File("sfx/Solar Wind.wav"));
             AudioInputStream Instructions = AudioSystem.getAudioInputStream(new File("sfx/Quaoar.wav"));
+            AudioInputStream IconMenu = AudioSystem.getAudioInputStream(new File("sfx/Bison Charge - Umeboshi Chazuke.wav"));
             backgroundMusic1 = AudioSystem.getClip();
             backgroundMusic1.open(MenuMusic);
             backgroundMusic2 = AudioSystem.getClip();
@@ -269,6 +269,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             credits.open(Credits);
             instructionsMusic = AudioSystem.getClip();
             instructionsMusic.open(Instructions);
+            iconselectormusic = AudioSystem.getClip();
+            iconselectormusic.open(IconMenu);
 
 
             icon1Rect = new Rectangle(iconBtnX,iconBtnY, iconBtnSize, iconBtnSize);
@@ -675,6 +677,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             String msg = "Click anywhere to return (Press icon selectors to select icon):";
             int tw = g2.getFontMetrics().stringWidth(msg);
             g2.drawString(msg, (WIDTH - tw) / 2, HEIGHT - 30);
+
             Image img1 = Toolkit.getDefaultToolkit().getImage(
                     GDiconlocater.GDiconLocater(
                             1,
@@ -967,15 +970,13 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         if (gameState == 5) {
             boolean hitSelector = false;
 
-            // 1) icon buttons
             if (icon1Rect.contains(p)) {
-                selectedIcon = 1;
+                selectedIcon        = 1;
                 selectedColor1Index = 2; // reset to yellow
                 selectedColor2Index = 7; // reset to white
                 hitSelector = true;
-            }
-            else if (icon2Rect.contains(p)) {
-                selectedIcon = 2;
+            } else if (icon2Rect.contains(p)) {
+                selectedIcon        = 2;
                 selectedColor1Index = 2;
                 selectedColor2Index = 7;
                 hitSelector = true;
@@ -1009,15 +1010,24 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 );
                 currentPlayerImg = Toolkit.getDefaultToolkit().getImage(selectedIconPath);
                 repaint();
-                return;  // stay in state 5
+                return;
             }
 
             gameState = 0;
+
+            // stop selector music, resume menu music
+            if (iconselectormusic.isRunning()) iconselectormusic.stop();
+            if (backgroundMusic1 != null) {
+                backgroundMusic1.setFramePosition(0);
+                backgroundMusic1.loop(Clip.LOOP_CONTINUOUSLY);
+            }
+
             repaint();
             return;
         }
 
         if (gameState == 0 && playButtonBounds != null && playButtonBounds.contains(p)) {
+            // play
             gameState = 1;
             noClip = false;
             backgroundMusic1.stop();
@@ -1027,15 +1037,20 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             return;
         }
         else if (gameState == 0 && iconMenuButtonBounds != null && iconMenuButtonBounds.contains(p)) {
+            // enter icon selector
             gameState = 5;
             noClip = false;
-            backgroundMusic1.stop();
-            backgroundMusic2.setFramePosition(0);
-            backgroundMusic2.loop(Clip.LOOP_CONTINUOUSLY);
+
+            // stop menu music, start selector music
+            if (backgroundMusic1.isRunning()) backgroundMusic1.stop();
+            iconselectormusic.setFramePosition(0);
+            iconselectormusic.loop(Clip.LOOP_CONTINUOUSLY);
+
             repaint();
             return;
         }
         else if (gameState == 0 && creatorMenuButtonBounds != null && creatorMenuButtonBounds.contains(p)) {
+            // cheat play
             gameState = 1;
             noClip = true;
             backgroundMusic1.stop();
@@ -1045,6 +1060,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             return;
         }
         else if (gameState == 0 && instructionsBounds != null && instructionsBounds.contains(p)) {
+            // instructions
             gameState = -1;
             backgroundMusic1.stop();
             instructionsMusic.setFramePosition(0);
@@ -1053,6 +1069,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             return;
         }
         else if (gameState == 0 && creditsBounds != null && creditsBounds.contains(p)) {
+            // credits
             gameState = 4;
             backgroundMusic1.stop();
             credits.setFramePosition(0);
@@ -1066,8 +1083,10 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             credits.stop();
             instructionsMusic.stop();
             icon.stop();
-            backgroundMusic1.setFramePosition(0);
-            backgroundMusic1.loop(Clip.LOOP_CONTINUOUSLY);
+            if (backgroundMusic1 != null) {
+                backgroundMusic1.setFramePosition(0);
+                backgroundMusic1.loop(Clip.LOOP_CONTINUOUSLY);
+            }
             repaint();
             return;
         }
@@ -1088,6 +1107,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             return;
         }
     }
+
 
 
 
