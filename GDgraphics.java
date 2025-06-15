@@ -144,6 +144,21 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private Image defaultPlayerImg;
     private Image currentPlayerImg;
 
+    // under your other scale fields
+    private double infoScale    = 1.0;
+    private double creditsScale = 1.0;
+
+    private static final double INFO_SCALE_MAX    = 1.2;
+    private static final double INFO_SCALE_MIN    = 1.0;
+    private static final double CREDITS_SCALE_MAX = 1.2;
+    private static final double CREDITS_SCALE_MIN = 1.0;
+
+    // for instructions/credits hover–scaling
+    private double instructionsScale = 1.0;
+    private static final double BTN_SCALE_MIN = 1.0;
+    private static final double BTN_SCALE_MAX = 1.1;
+
+
 
 
 
@@ -483,6 +498,13 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             if (hoveringCreator && creatorScale < CREATOR_SCALE_MAX) creatorScale += scaleStep;
             else if (!hoveringCreator && creatorScale > CREATOR_SCALE_MIN) creatorScale -= scaleStep;
 
+            if (hoveringInstructions && instructionsScale < BTN_SCALE_MAX) instructionsScale += scaleStep;
+            else if (!hoveringInstructions && instructionsScale > BTN_SCALE_MIN) instructionsScale -= scaleStep;
+
+            if (hoveringCredits && creditsScale < BTN_SCALE_MAX) creditsScale += scaleStep;
+            else if (!hoveringCredits && creditsScale > BTN_SCALE_MIN) creditsScale -= scaleStep;
+
+
         }
 
         // Level running (state 1) and level paused (state -2)
@@ -654,15 +676,29 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 }
             }
 
-            if(greenButton != null){ // Instructions button
-                g2.drawImage(greenButton, 350, 600, 60, 60, this);
-                instructionsBounds = new Rectangle( 350, 600, 60, 60);
+
+            int baseSize = 75;
+
+            int insSize  = (int)(baseSize * instructionsScale);
+            int insX     = 350 - (insSize - baseSize)/2 -30;
+            int insY     = 550 - (insSize - baseSize)/2;
+            if (greenButton != null) {
+                g2.drawImage(greenButton, insX, insY, insSize, insSize, this);
+                instructionsBounds = new Rectangle(insX, insY, insSize, insSize);
             }
 
-            if (blueButton != null){ // Credits button (originally blue but changed to green as well)
-                g2.drawImage(blueButton, 450, 600, 60, 60, this);
-                creditsBounds = new Rectangle( 450, 600, 60, 60);
+            int credSize = (int)(baseSize * creditsScale);
+            int credX    = 450 - (credSize - baseSize)/2 +10;
+            int credY    = 550 - (credSize - baseSize)/2;
+            if (blueButton != null) {
+                g2.drawImage(blueButton, credX, credY, credSize, credSize, this);
+                creditsBounds = new Rectangle(credX, credY, credSize, credSize);
             }
+
+
+
+
+
 
         }
         else if (gameState == 5) {
