@@ -173,8 +173,8 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         addMouseMotionListener(this);
 
         // Player icon selection (may or may not be used)
-            icons.add(0,"1");
-            icons.add(1,"2");
+        icons.add(0,"1");
+        icons.add(1,"2");
 
         icon1Rect = new Rectangle(ICON1_X, ICON1_Y, ICON_BTN_SIZE, ICON_BTN_SIZE);
         icon2Rect = new Rectangle(ICON1_X + ICON_BTN_SPACING, ICON1_Y,
@@ -792,50 +792,50 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         }
 
         else if (gameState == 1 || gameState == -2) {
-                if (bgImg != null) {
-                    int bwBg = bgImg.getWidth(this);
-                    for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
-                        g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), this);
+            if (bgImg != null) {
+                int bwBg = bgImg.getWidth(this);
+                for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
+                    g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), this);
+                }
+            }
+
+            for (Rectangle2D.Double spikeRect : spikes) { // Moving spikes forward
+                int spikeHeight = spike.getHeight(this);
+                int spikeWidth = spike.getWidth(this);
+                spikeWidth /= 3;
+                spikeHeight /= 3;
+                g2.drawImage(spike, (int) spikeRect.x, (int) spikeRect.y, spikeWidth, spikeHeight, this);
+            }
+
+            if (shipPortal != null) { // Drawing end portal
+                g2.drawImage(shipPortal, (int) endPort.x, (int) endPort.y, 40, 120, this);
+                g2.setColor(Color.MAGENTA);
+                g2.fillRect((int) endPort.x, 420, 40, 120);
+            } else {
+                System.out.println("Nothing");
+            }
+
+            if (blockImg != null) { // Moving blocks forward and drawing ground
+
+                // Spacing the blocks evenly to create the ground
+                int nativeBw = blockImg.getWidth(this);
+                int nativeBh = blockImg.getHeight(this);
+                int gapHeight = getHeight() - (GROUND_Y + playerSize);
+                int scaledBh = gapHeight / 3;
+                int scaledBw = nativeBw * scaledBh / nativeBh;
+                int startY = GROUND_Y + playerSize;
+                int offsetX = bgOffsetX % scaledBw;
+                for (int row = 0; row < 3; row++) {
+                    int y = startY + row * scaledBh;
+                    for (int i = -1; i <= getWidth() / scaledBw + 1; i++) {
+                        g2.drawImage(blockImg, offsetX + i * scaledBw, (int) (y - cameraY), scaledBw, scaledBh, null);
                     }
                 }
-
-                for (Rectangle2D.Double spikeRect : spikes) { // Moving spikes forward
-                    int spikeHeight = spike.getHeight(this);
-                    int spikeWidth = spike.getWidth(this);
-                    spikeWidth /= 3;
-                    spikeHeight /= 3;
-                    g2.drawImage(spike, (int) spikeRect.x, (int) spikeRect.y, spikeWidth, spikeHeight, this);
+                // Drawing the added blocks
+                for (Rectangle2D.Double r : blocks) {
+                    g2.drawImage(blockImg, (int) r.x, (int) r.y, (int) r.width, (int) r.height, this);
                 }
-
-                if (shipPortal != null) { // Drawing end portal
-                    g2.drawImage(shipPortal, (int) endPort.x, (int) endPort.y, 40, 120, this);
-                    g2.setColor(Color.MAGENTA);
-                    g2.fillRect((int) endPort.x, 420, 40, 120);
-                } else {
-                    System.out.println("Nothing");
-                }
-
-                if (blockImg != null) { // Moving blocks forward and drawing ground
-
-                    // Spacing the blocks evenly to create the ground
-                    int nativeBw = blockImg.getWidth(this);
-                    int nativeBh = blockImg.getHeight(this);
-                    int gapHeight = getHeight() - (GROUND_Y + playerSize);
-                    int scaledBh = gapHeight / 3;
-                    int scaledBw = nativeBw * scaledBh / nativeBh;
-                    int startY = GROUND_Y + playerSize;
-                    int offsetX = bgOffsetX % scaledBw;
-                    for (int row = 0; row < 3; row++) {
-                        int y = startY + row * scaledBh;
-                        for (int i = -1; i <= getWidth() / scaledBw + 1; i++) {
-                            g2.drawImage(blockImg, offsetX + i * scaledBw, (int) (y - cameraY), scaledBw, scaledBh, null);
-                        }
-                    }
-                    // Drawing the added blocks
-                    for (Rectangle2D.Double r : blocks) {
-                        g2.drawImage(blockImg, (int) r.x, (int) r.y, (int) r.width, (int) r.height, this);
-                    }
-                }
+            }
 
             // pick which icon to draw
             Image iconToDraw;
