@@ -105,6 +105,24 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
 
     // End portal (originally a ship portal)
     private Rectangle2D.Double endPort = new Rectangle2D.Double(11000, 420, 40, 200);
+    private int selectedIconNumber = 1;
+    private int selectedColor1Index = 2;
+    private int selectedColor2Index = 7;
+    private String selectedIconPath;
+    private final String[] colorNames = {
+            "red","orange","yellow","green","blue","indigo","violet","white","black"
+    };
+    private int   selectedIcon = 1;
+    private boolean red1, orange1, yellow1=true, green1, blue1, indigo1, violet1, white1, black1;
+    private boolean red2, orange2, yellow2, green2, blue2, indigo2, violet2, white2=true, black2;
+
+    private int iconBtnX       = 100, iconBtnY       = 100;
+    private int iconBtnSize    = 64,  iconBtnSpacing = 100;
+    private Rectangle icon1Rect, icon2Rect;
+
+    private int previewX       = 300, previewY       = 150;
+    private int previewSize    = 128;
+    private int highlightStroke=   4;
 
     public GDgraphics() throws UnsupportedAudioFileException, IOException {
         // Setting game dimensions and initializing keyboard and mouse
@@ -160,8 +178,6 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         greenButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDinfobutton.png");
         tracker.addImage(greenButton, 18);
         blueButton = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDcreditsbutton.png");
-        tracker.addImage(blueButton, 19);
-        iconmenu = Toolkit.getDefaultToolkit().getImage("GDprojectImages/GDiconmenu.png");
 
 
         try {
@@ -198,6 +214,17 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             credits.open(Credits);
             instructionsMusic = AudioSystem.getClip();
             instructionsMusic.open(Instructions);
+
+
+            icon1Rect = new Rectangle(iconBtnX,                              iconBtnY, iconBtnSize, iconBtnSize);
+            icon2Rect = new Rectangle(iconBtnX + iconBtnSpacing,              iconBtnY, iconBtnSize, iconBtnSize);
+
+            selectedIconPath = GDiconlocater.GDiconLocater(
+                    selectedIcon,
+                    red1, orange1, yellow1, green1, blue1, indigo1, violet1, white1, black1,
+                    red2, orange2, yellow2, green2, blue2, indigo2, violet2, white2, black2
+            );
+
 
 
         } catch (Exception e) {
@@ -518,7 +545,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             if (bgImg != null) {
                 int bwBg = bgImg.getWidth(this);
                 for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
-                    g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), null);
+                    g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), this);
                 }
             }
 
@@ -586,7 +613,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                 if (bgImg != null) {
                     int bwBg = bgImg.getWidth(this);
                     for (int i = -1; i <= getWidth() / bwBg + 1; i++) {
-                        g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), null);
+                        g2.drawImage(bgImg, bgOffsetX + i * bwBg, 0, bwBg, getHeight(), this);
                     }
                 }
 
@@ -654,6 +681,51 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         }
         else if (gameState == 4){ // Credits screen
             g2.drawImage(creditsImage, 0, 0, 900, 700, this);
+        }
+        if (gameState == 5) {
+            g2.drawImage(iconselector,0, 0, 900, 700, this);
+
+            Image iconImg1 = Toolkit.getDefaultToolkit().getImage(
+                    GDiconlocater.GDiconLocater(
+                            1,
+                            false,false,true,  false,false,false,false,false,false,  // yellow1
+                            false,false,false,false,false,false,false,true,false    // white2
+                    )
+            );
+            g2.drawImage(iconImg1,
+                    icon1Rect.x, icon1Rect.y,
+                    iconBtnSize, iconBtnSize,
+                    this);
+
+            // Load and draw icon #2
+            Image iconImg2 = Toolkit.getDefaultToolkit().getImage(
+                    GDiconlocater.GDiconLocater(
+                            2,
+                            false,false,true,  false,false,false,false,false,false,  // yellow1
+                            false,false,false,false,false,false,false,true,false    // white2
+                    )
+            );
+            g2.drawImage(iconImg2,
+                    icon2Rect.x, icon2Rect.y,
+                    iconBtnSize, iconBtnSize,
+                    this);
+
+            // ─── Highlight Selected Icon ───────────────────────────────
+            g2.setColor(Color.WHITE);
+            g2.setStroke(new BasicStroke(highlightStroke));
+            if (selectedIcon == 1) {
+                g2.drawRect(icon1Rect.x, icon1Rect.y,
+                        icon1Rect.width, icon1Rect.height);
+            } else {
+                g2.drawRect(icon2Rect.x, icon2Rect.y,
+                        icon2Rect.width, icon2Rect.height);
+            }
+
+            Image preview = Toolkit.getDefaultToolkit().getImage(selectedIconPath);
+            g2.drawImage(preview,
+                    previewX, previewY,
+                    previewSize, previewSize,
+                    this);
         }
     }
 
@@ -793,7 +865,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
         }
 
         else if (gameState == 0 && iconMenuButtonBounds != null && iconMenuButtonBounds.contains(e.getPoint())) {
-            gameState = 1;
+            gameState = 5;
             noClip = false;
             if (backgroundMusic1 != null && backgroundMusic1.isRunning()) {
                 backgroundMusic1.stop();
@@ -857,6 +929,31 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             gameState = 1;
             backgroundMusic2.setFramePosition(frames);
             backgroundMusic2.start();
+        }
+        if (gameState == 0){
+
+        }
+        if (gameState == 5) {
+            Point p = e.getPoint();
+
+            if (icon1Rect.contains(p) && selectedIcon != 1) {
+                selectedIcon = 1;
+                // reset to default yellow1/white2
+                yellow1 = true; white2 = true;
+            }
+            else if (icon2Rect.contains(p) && selectedIcon != 2) {
+                selectedIcon = 2;
+                yellow1 = true; white2 = true;
+            }
+
+            // rebuild path
+            selectedIconPath = GDiconlocater.GDiconLocater(
+                    selectedIcon,
+                    red1, orange1, yellow1, green1, blue1, indigo1, violet1, white1, black1,
+                    red2, orange2, yellow2, green2, blue2, indigo2, violet2, white2, black2
+            );
+            repaint();
+            return;
         }
     }
     public void mousePressed(MouseEvent e) {}
