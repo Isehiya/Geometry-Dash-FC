@@ -131,7 +131,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
     private final int ICON_BTN_SIZE    = 64;
     private final int ICON_BTN_SPACING = 100;
     private final int ICON1_X = 100, ICON1_Y = 100;
-    private final int PREVIEW_X = 300, PREVIEW_Y = 150, PREVIEW_SIZE = 128;
+    private final int PREVIEW_X = 650, PREVIEW_Y = 150, PREVIEW_SIZE = 128;
 
     private final int COLOR_BTN_SIZE    = 48;
     private final int COLOR_BTN_SPACING = 8;
