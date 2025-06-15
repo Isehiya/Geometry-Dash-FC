@@ -677,6 +677,11 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
             String msg = "Click anywhere to return (Press icon selectors to select icon):";
             int tw = g2.getFontMetrics().stringWidth(msg);
             g2.drawString(msg, (WIDTH - tw) / 2, HEIGHT - 30);
+            String msg2 = "Icon Selection";
+            int tw2 = g2.getFontMetrics().stringWidth(msg);
+            g2.drawString(msg2, (WIDTH - tw2) / 2, HEIGHT-535);
+
+
 
             Image img1 = Toolkit.getDefaultToolkit().getImage(
                     GDiconlocater.GDiconLocater(
