@@ -730,7 +730,7 @@ public class GDgraphics extends JPanel implements KeyListener, MouseListener, Mo
                     backgroundMusic2.stop();
                 }
             }
-            else if (gameState == 2){ // Exits if escape is pressed in the pause menu
+            else if (gameState == -2){ // Exits if escape is pressed in the pause menu
                 gameState = 0;
                 resetGame();
                 backgroundMusic1.setFramePosition(0);
