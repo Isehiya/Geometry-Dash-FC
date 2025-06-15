@@ -24,17 +24,17 @@ A simplified Geometry Dash clone made in Java for a school assignment. Built usi
 | Working Graphics    | ✅ Done       |
 | Loaded Icons        | ✅ Done       |
 | Proper Menu         | ✅ Done   |
-| Working Menu        | 🔄 Planned   |
+| Working Menu        | ✅ Done    |
 | Moving Background   | ✅ Done       |
 | Basic Movement      | ✅ Done    |
 | Basic Gravity       | ✅ Done       |
-| Collision           | 🔄 Planned   |
+| Collision           | ✅ Done    |
 | Music               | ✅ Done       |
-| Death Effects       | 🔄 Planned   |
-| Reset on Death      | 🔄 Planned   |
-| Pause Menu          | 🔄 Planned   |
+| Death Effects       | ✅ Done    |
+| Reset on Death      | ✅ Done    |
+| Pause               | ✅ Done    |
 | ------------------- | -----------  |
-| Game                | ⚠️ WIP       |
+| Game                | ✅ Done      |
 
 </details>
 
